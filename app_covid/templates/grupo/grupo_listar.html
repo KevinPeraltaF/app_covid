@@ -1,0 +1,113 @@
+{% extends 'plantillaBase.html' %} {% block content %}
+<div class="row">
+    <div class="col">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="row mt-2">
+
+    <div class="col-sm-12 col-12 text-right m-b-20">
+        {% if perms.auth.add_group %}
+        <a href="{% url 'grupo_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i>
+            Añadir</a> {% endif %}
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-border table-striped custom-table  mb-0  no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dato in object_list %}
+                                <tr>
+                                    <td>{{ dato.name }}</td>
+
+                                    <td class="text-right">
+                                        <div class="dropdown dropdown-action">
+                                            <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                {% if perms.auth.change_group %}
+                                                <a class="dropdown-item" href="{% url 'grupo_editar' dato.id%}"><i
+                                                        class="fa fa-pencil m-r-5"></i> Editar</a> {% endif %} {% if perms.auth.delete_group %}
+                                                <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'grupo_eliminar' dato.id%}')"><i
+                                                        class="fa fa-trash-o  m-r-5"></i>Eliminar</a>{% endif %} {% if perms.auth.view_group %}
+                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'grupo_detalle' dato.id%}')"><i
+                                                        class="fa fa-eye  m-r-5"></i>Ver</a>{% endif %}
+
+
+
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+<!-- Large modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="detalle" aria-hidden="true">
+
+</div>
+
+
+{% endblock %} {% block content_extra_js %}
+<script>
+    /** funcion para abrir el modal de eliminar */
+    function abrirModalEliminar(url) {
+
+        $('#eliminar').load(url, function() {
+            $('#eliminar').modal('show');
+        })
+    }
+
+    /** funcion para abrir el modal de eliminar */
+    function abrirModalDetalle(url) {
+
+        $('#detalle').load(url, function() {
+            $('#detalle').modal('show');
+        })
+    }
+</script>
+
+
+{% endblock content_extra_js %}

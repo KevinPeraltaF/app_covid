@@ -1,0 +1,82 @@
+<div class="modal-dialog modal-lg ">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Detalle Registro</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <table class="table table-bordered table-responsive-sm table-responsive-xl">
+                <tbody>
+
+                    <tr>
+                        <th>Título:</th>
+                        <td>{{object.titulo}}</td>
+                        <th>Icono:</th>
+                        <td>
+                            {% if object.icono %}<img class="img-rounded " src="{{object.icono.url}}" width="120"
+                                alt="Icono del menú">{% else %}<a href="#">No tiene icono</a> {% endif %}
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th>Descripción:</th>
+                        <td colspan="3">{{object.descripcion}}</td>
+                    </tr>
+                    <tr>
+                        <th>Url:</th>
+                        <td colspan="3">{{object.url}}</td>
+                    </tr>
+                    <tr>
+                        <th>¿ Es módulo Principal?</th>
+                        <td>
+                            {% if object.es_modulo_principal%}
+                            <span class="badge badge-success">SI </span>
+                            {% else %}
+                            <span class="badge badge-danger">NO </span>
+                            {% endif %}
+
+                        </td>
+                        <th>¿está activo?</th>
+                        <td>
+                            {% if object.activo%}
+                            <span class="badge badge-success">SI</span>
+                            {% else %}
+                            <span class="badge badge-danger">NO </span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Menú principal:</th>
+                        <td> {% if object.principal %}{{object.principal}}{% else %}<a href="#">No tiene menú
+                                principal</a> {% endif %}
+                        </td>
+                        <th>Grupo de Usuario:</th>
+                        <td>
+                            <ul>
+                                {% for object in object.grupo.all%}
+
+                                <li class="badge  badge-pill badge-info">
+                                    {{object}}
+                                </li>
+                                
+                                {% endfor %}
+                            </ul>
+                        </td>
+
+                    </tr>
+                   
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+        </form>
+    </div>
+
+</div>
