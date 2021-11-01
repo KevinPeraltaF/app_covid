@@ -7,10 +7,11 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.core import signing
 #MODELS
 from .models import Menu, Group, User
 #FORMS
-from .forms import  MenuForm,GrupoForm
+from .forms import  MenuForm,GrupoForm, UserForm
 
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
@@ -148,7 +149,33 @@ class UsuarioListView(LoginRequiredMixin,ListView):
         context['titulo'] = "Registro de usuarios"
         return context
 
+class UsuarioCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
+    model = User
+    form_class = UserForm
+    template_name = "usuario/usuario_crear.html"
+    success_url = reverse_lazy('usuario_listar')
+    success_message = 'Registro Guardado Exitosamente'
 
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+    
+        form.instance.username = form.cleaned_data['cedula']
+        form.instance.password =  form.cleaned_data['cedula']
+
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de usuarios"
+        return context
+
+
+class UsuarioDetailView(LoginRequiredMixin,DetailView):
+    model = User
+    template_name = "usuario/usuario_detalle.html"
 
 
 

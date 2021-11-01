@@ -36,9 +36,10 @@ class ModeloBase(models.Model):
 
 class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula')
-    tipo_genero = (('N', 'NINGUNO'), ('M', 'MASCULINO'), ('F', 'FEMENINO'))
-    genero = models.CharField('sexo', choices=tipo_genero, default='N', max_length=1)
-    grupo = models.ForeignKey(Group,related_name='+', blank=True, null=True, verbose_name='Grupos de usuario', on_delete=models.PROTECT)
+    tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
+    genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
+    
+   
   
 
 

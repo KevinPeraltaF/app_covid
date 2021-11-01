@@ -19,6 +19,10 @@ urlpatterns = [
 
 
     path('usuario/', key.UsuarioListView.as_view(), name="usuario_listar") ,
+    path('usuario/crear/', key.UsuarioCreateView.as_view(), name="usuario_crear") ,
+
+    path('usuario/Detalle/<int:pk>', key.UsuarioDetailView.as_view(), name="usuario_detalle") ,
+
  
 
 ]

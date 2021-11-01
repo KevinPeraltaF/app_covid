@@ -12,12 +12,41 @@
                 <tbody>
 
                     <tr>
-                        <th>Nombre del Grupo:</th>
-                        <td>{{object.name}}</td>
+                        <th>Nombre de Usuario:</th>
+                        <td colspan="3">{{object.username}}</td>
+                        <th>Nombres:</th>
+                        <td>{{ object.last_name }} {{ object.first_name }}</td>
 
                     </tr>
 
+                    <tr>
+                        <th>Email:</th>
+                        <td colspan="5">{{ object.email }}</td>
+                    </tr>
 
+                    <tr>
+                        <th>¿Is active?</th>
+                        <td>
+                            {% if object.is_active == True %}
+                            <a class="badge " data-toggle="tooltip" data-placement="top" title="activo"><span
+                                    class="fa fa-check "></span></a> {% else %}
+                            <a class="badge" data-toggle="tooltip" data-placement="top" title="activo"><span
+                                    class="fa fa-times "></span></a> {% endif %}
+                        </td>
+
+                        <th>¿Is Staff?</th>
+                        <td> {% if object.is_staff == True %}
+                            <a class="badge " data-toggle="tooltip" data-placement="top" title="is staff"><span
+                                    class="fa fa-check "></span></a> {% else %}
+                            <a class="badge" data-toggle="tooltip" data-placement="top" title="is staff"><span
+                                    class="fa fa-times "></span></a> {% endif %}
+                        </td>
+                        <th>¿Is Super User?</th>
+                        <td> {% if object.is_superuser == True %}
+                            <a class="badge " data-toggle="tooltip" data-placement="top" title="is superUser"><span class="fa fa-check "></span></a> {% else %}
+                            <a class="badge" data-toggle="tooltip" data-placement="top" title="is superUser"><span class="fa fa-times "></span></a> {% endif %}
+                        </td>
+                    </tr>
 
 
                 </tbody>
