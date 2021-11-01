@@ -1,7 +1,7 @@
 #DJANGO
 from django import forms
 #MODELS
-from .models import Menu,MenuGrupo,Group,Permission
+from .models import Menu,Group,Permission,User
 
 class MenuForm(forms.ModelForm):
     
@@ -35,23 +35,8 @@ class GrupoForm(forms.ModelForm):
 
         
             
-
-class MenuGrupoForms(forms.Form):
-    menu = forms.ModelChoiceField(
-        label="Menú", 
-        required=True,
-        queryset=Menu.objects.filter(estado=True), 
-        widget=forms.Select(
-             attrs={'class': 'form-control'}
-             
-             )
-             )
-    grupo = forms.ModelMultipleChoiceField(
-        label="Grupos", 
-        required=True,
-        queryset=Group.objects.all(),
-        widget=forms.SelectMultiple(
-            attrs={'class': 'form-control'}
-
-            )
-            )
+class UserForm(forms.ModelForm):
+    
+    class Meta:
+        model = User
+        fields = '__all__'

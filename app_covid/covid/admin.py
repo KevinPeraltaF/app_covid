@@ -1,8 +1,8 @@
 from django.contrib import admin
-
-from .models import ModeloBase,Menu,MenuGrupo,Permission
+from django.contrib.auth.admin import UserAdmin
+from .models import ModeloBase,Menu,Permission, User
 # Register your models here.
-
+admin.site.register(User, UserAdmin)
 
 
 

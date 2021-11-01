@@ -17,4 +17,8 @@ urlpatterns = [
     path('grupo/Eliminar/<int:pk>', key.GrupoDeleteView.as_view(), name="grupo_eliminar") ,
     path('grupo/Detalle/<int:pk>', key.GrupoDetailView.as_view(), name="grupo_detalle") ,
 
+
+    path('usuario/', key.UsuarioListView.as_view(), name="usuario_listar") ,
+ 
+
 ]

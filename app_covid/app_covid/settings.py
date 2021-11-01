@@ -139,3 +139,4 @@ LOGOUT_REDIRECT_URL='/accounts/login/'
 #Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+AUTH_USER_MODEL = 'covid.User'

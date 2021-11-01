@@ -1,10 +1,12 @@
 #DJANGO
 from django.db import models
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.models import Permission
-from django.core import signing
+from django.contrib.auth.models import Group, AbstractUser, Permission
+from django.conf import settings
 #auditoria - crum django
 from crum import get_current_user
+
+
+
 
 #MODELO BASE - CLASE ABSTRACTA
 class ModeloBase(models.Model):
@@ -15,8 +17,8 @@ class ModeloBase(models.Model):
 
     """Model definition for ModeloBase."""
     fecha_creacion = models.DateTimeField(verbose_name='Fecha creación',auto_now_add=True)
-    usuario_creacion = models.ForeignKey(User, verbose_name='Usuario Creación', related_name='+', blank=True, null=True,on_delete=models.PROTECT, editable=False)
-    usuario_modificacion = models.ForeignKey(User, verbose_name='Usuario Modificación', related_name='+', blank=True, null=True,on_delete=models.PROTECT , editable=False)
+    usuario_creacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Creación', related_name='+', blank=True, null=True,on_delete=models.PROTECT, editable=False)
+    usuario_modificacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Modificación', related_name='+', blank=True, null=True,on_delete=models.PROTECT , editable=False)
     fecha_modificacion = models.DateTimeField(verbose_name='Fecha Modificación', auto_now=True)
     estado = models.BooleanField(default=True)
 
@@ -29,9 +31,17 @@ class ModeloBase(models.Model):
         self.usuario_modificacion = user
         super(ModeloBase, self).save(*args, **kwargs)
 
-   
 
-    
+
+
+class User(AbstractUser,ModeloBase):
+    cedula=models.CharField(max_length=10, verbose_name='Cédula')
+    tipo_genero = (('N', 'NINGUNO'), ('M', 'MASCULINO'), ('F', 'FEMENINO'))
+    genero = models.CharField('sexo', choices=tipo_genero, default='N', max_length=1)
+    grupo = models.ForeignKey(Group,related_name='+', blank=True, null=True, verbose_name='Grupos de usuario', on_delete=models.PROTECT)
+  
+
+
 
 #MODELO MENU 
 class Menu(ModeloBase):
@@ -65,14 +75,3 @@ class Menu(ModeloBase):
   
 
 
-#MODELO PERFIL_USUARIO - MENU
-class MenuGrupo(ModeloBase):
-    menu = models.ForeignKey(Menu, verbose_name='Menù', on_delete=models.CASCADE)
-    grupo_usuario = models.ManyToManyField(Group, verbose_name='Grupo Usuario')
-
-    class Meta:
-        verbose_name = "Menú Perfil"
-        verbose_name_plural = "Menú Perfiles"
-
-    def __str__(self):
-        return '{}'.format(self.menu.nombre)

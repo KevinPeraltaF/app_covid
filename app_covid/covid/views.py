@@ -8,9 +8,9 @@ from django.views.generic import TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 #MODELS
-from .models import Menu, Group
+from .models import Menu, Group, User
 #FORMS
-from .forms import  MenuForm,GrupoForm,MenuGrupoForms
+from .forms import  MenuForm,GrupoForm
 
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
@@ -136,6 +136,17 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 
 
 
+#USUARIOS
+class UsuarioListView(LoginRequiredMixin,ListView):
+    model = User
+    template_name = "usuario/usuario_listar.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de usuarios"
+        return context
 
 
 
