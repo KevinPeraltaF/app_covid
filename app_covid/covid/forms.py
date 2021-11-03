@@ -1,7 +1,7 @@
 #DJANGO
 from django import forms
 #MODELS
-from .models import Menu,Group,Permission,User
+from .models import Menu,Group,Permission,User,Menu_Groups
 
 class MenuForm(forms.ModelForm):
     
@@ -18,7 +18,7 @@ class MenuForm(forms.ModelForm):
         fields = '__all__'
         
     
-        exclude=("usuario_creacion","usuario_modificacion","estado",)
+        exclude=("usuario_creacion","usuario_modificacion",)
            
 class GrupoForm(forms.ModelForm):
 
@@ -46,8 +46,12 @@ class UserForm(forms.ModelForm):
             self.fields['groups'].widget.attrs['class'] = "duallistbox"
             visible.field.widget.attrs['class'] = 'form-control'
     
-    
-   
+class MenuGrupoForm(forms.ModelForm):
+    class Meta:
+        model = Menu_Groups
+        fields = '__all__'
+        
+
             
 
         

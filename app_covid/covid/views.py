@@ -10,9 +10,9 @@ from django.contrib import messages
 
 from django.contrib.auth.hashers import make_password
 #MODELS
-from .models import Menu, Group, User
+from .models import Menu, Group, User,Menu_Groups
 #FORMS
-from .forms import  MenuForm,GrupoForm, UserForm
+from .forms import  MenuForm,GrupoForm, UserForm,MenuGrupoForm
 
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
@@ -82,6 +82,22 @@ class MenuDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_menu'
     model = Menu
     template_name = "menu/menu_detalle.html"
+
+
+class Menu_AccesoListView(LoginRequiredMixin,ListView):
+    
+    model = Menu_Groups
+    template_name = "menu/accesoModulo_listar.html"
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = " Acceso a Módulos"
+        context['grupos'] = Group.objects.all()
+        return context
+
+
+
 
 #GRUPOS
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):

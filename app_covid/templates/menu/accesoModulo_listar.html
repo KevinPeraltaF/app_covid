@@ -1,0 +1,58 @@
+{% extends 'plantillaBase.html' %} {% block content %}
+<div class="row">
+    <div class="col">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="content">
+
+    <div class="row">
+        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3">
+            <a href="{% url 'grupo_crear'%}" class="btn btn-primary btn-block"><i class="fa fa-plus"></i> Añadir Grupo</a>
+            <div class="roles-menu">
+                <ul>
+                    {% for dato in grupos %}
+                    <li><a href="">{{ dato.name }}</a></li>
+                    {% endfor %}
+
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-9">
+            <h6 class="card-title m-b-20">Acceso a Módulos</h6>
+            <div class="m-b-30">
+                <ul class="list-group">
+
+                    {% for dato in object_list%}
+                    <li class="list-group-item">
+                        {{ dato.menu }}
+                        <div class="material-switch float-right">
+                            <input id="staff_module" type="checkbox" {% if dato.activo %} checked {% endif %}>
+                            <label for="staff_module" class="badge-success"></label>
+                        </div>
+                    </li>
+                    {% endfor %}
+
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %} {% block content_extra_js %} {% endblock content_extra_js %}

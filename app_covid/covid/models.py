@@ -41,9 +41,6 @@ class User(AbstractUser,ModeloBase):
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
 
    
-
-
-
 #MODELO MENU 
 class Menu(ModeloBase):
     """Model definition for Menu."""
@@ -53,7 +50,7 @@ class Menu(ModeloBase):
     url = models.CharField(verbose_name='Url', max_length=200)
     es_modulo_principal = models.BooleanField(default=False ,verbose_name='¿Es módulo principal?')
     principal = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
-    grupo = models.ManyToManyField(Group, verbose_name='Grupos de usuario')
+    grupo = models.ManyToManyField(Group, through='Menu_Groups', verbose_name='Grupos de usuario')
     activo = models.BooleanField(default=True)
 
     class Meta:
@@ -64,14 +61,18 @@ class Menu(ModeloBase):
     def __str__(self):
         """Unicode representation of Menu."""
         return '{}'.format(self.titulo)
-
-
     
     def save(self, *args, **kwargs):
         """Save method for Menu."""
         self.titulo = self.titulo.lower().strip()
         self.descripcion = self.descripcion.lower().strip()
         return super(Menu, self).save(*args, **kwargs)
+
+
+class Menu_Groups(models.Model):
+    group = models.ForeignKey(Group,on_delete=models.PROTECT)
+    menu = models.ForeignKey(Menu,on_delete=models.PROTECT)
+    activo = models.BooleanField(default=True)
 
   
 
