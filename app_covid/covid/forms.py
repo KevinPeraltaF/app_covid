@@ -8,7 +8,7 @@ class MenuForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MenuForm, self).__init__(*args, **kwargs)
         
-        self.fields["principal"].queryset = Menu.objects.filter(estado=True, es_modulo_principal=True, principal__isnull= True)
+        self.fields["principal"].queryset = Menu.objects.filter(es_modulo_principal=True, principal__isnull= True)
         
         for visible in self.visible_fields():
             self.fields['grupo'].widget.attrs['class'] = "duallistbox"
@@ -31,8 +31,6 @@ class GrupoForm(forms.ModelForm):
         self.fields['name'].widget.attrs['class'] = "form-control"
         self.fields['permissions'].widget.attrs['class'] = "duallistbox"
         self.fields['permissions'].queryset = Permission.objects.exclude(content_type__model__in=['session', 'usuarios', 'permission', 'contenttype', 'logentry', 'configuracion'])
-
-        
             
 class UserForm(forms.ModelForm):
 

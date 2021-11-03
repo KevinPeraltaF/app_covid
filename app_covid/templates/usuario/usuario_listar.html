@@ -15,7 +15,8 @@
 
     <div class="col-sm-12 col-12 text-right m-b-20">
         {% if perms.auth.add_group %}
-        <a href="{% url 'usuario_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i>
+        <a href="{% url 'usuario_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i
+                class="fa fa-plus"></i>
             Añadir</a> {% endif %}
 
     </div>
@@ -33,6 +34,7 @@
                                 <tr>
                                     <th>usuario</th>
                                     <th>Nombres</th>
+                                    <th>Grupo</th>
                                     <th>Email</th>
                                     <th style="width: 30.125px;">Activo</th>
                                     <th>Staff status</th>
@@ -45,16 +47,27 @@
                                 <tr>
                                     <td>{{ dato.username }}</td>
                                     <td>{{ dato.last_name }} {{ dato.first_name }}</td>
+                                    <td>
+                                        {% if dato.is_superuser == True %}
+                                        <li class="badge badge-pill badge-info">Super Usuario</li>{% endif %} {% for dato in dato.groups.all %}
+                                        <li class="badge badge-pill badge-info">{{ dato }}</li>
+                                        {% endfor %}
+
+
+
+                                    </td>
 
                                     <td>{{ dato.email }}</td>
                                     <td>
                                         {% if dato.is_active == True %}
                                         <a class="badge " data-toggle="tooltip" data-placement="top" title="activo"><span class="fa fa-check "></span></a> {% else %}
-                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="activo"><span class="fa fa-times "></span></a> {% endif %}
+                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="activo"><span
+                                                class="fa fa-times "></span></a> {% endif %}
                                     </td>
                                     <td> {% if dato.is_staff == True %}
                                         <a class="badge " data-toggle="tooltip" data-placement="top" title="is staff"><span class="fa fa-check "></span></a> {% else %}
-                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="is staff"><span class="fa fa-times "></span></a> {% endif %}</td>
+                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="is staff"><span class="fa fa-times "></span></a> {% endif %}
+                                    </td>
                                     <td> {% if dato.is_superuser == True %}
                                         <a class="badge " data-toggle="tooltip" data-placement="top" title="is superUser"><span class="fa fa-check "></span></a> {% else %}
                                         <a class="badge" data-toggle="tooltip" data-placement="top" title="is superUser"><span class="fa fa-times "></span></a> {% endif %}
@@ -70,9 +83,9 @@
                                                 <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     {% if perms.auth.change_group %}
-                                                    <a class="dropdown-item" href="{% url 'grupo_editar' dato.id%}"><i
+                                                    <a class="dropdown-item" href="{% url 'usuario_editar' dato.id%}"><i
                                                         class="fa fa-pencil m-r-5"></i> Editar</a> {% endif %} {% if perms.auth.delete_group %}
-                                                    <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'grupo_eliminar' dato.id%}')"><i
+                                                    <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'usuario_eliminar' dato.id%}')"><i
                                                         class="fa fa-trash-o  m-r-5"></i>Eliminar</a>{% endif %} {% if perms.auth.view_group %}
                                                     <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'usuario_detalle' dato.id%}')"><i
                                                         class="fa fa-eye  m-r-5"></i>Ver</a>{% endif %}

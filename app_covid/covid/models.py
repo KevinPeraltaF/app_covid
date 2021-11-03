@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import Group, AbstractUser, Permission
 from django.conf import settings
+
 #auditoria - crum django
 from crum import get_current_user
 
@@ -20,7 +21,6 @@ class ModeloBase(models.Model):
     usuario_creacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Creación', related_name='+', blank=True, null=True,on_delete=models.PROTECT, editable=False)
     usuario_modificacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Modificación', related_name='+', blank=True, null=True,on_delete=models.PROTECT , editable=False)
     fecha_modificacion = models.DateTimeField(verbose_name='Fecha Modificación', auto_now=True)
-    estado = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         user = get_current_user()
@@ -34,13 +34,13 @@ class ModeloBase(models.Model):
 
 
 
+
 class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula')
     tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
-    
+
    
-  
 
 
 

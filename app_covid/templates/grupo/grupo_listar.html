@@ -32,6 +32,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Grupos</th>
 
                                     <th>Acciones</th>
                                 </tr>
@@ -40,6 +41,11 @@
                                 {% for dato in object_list %}
                                 <tr>
                                     <td>{{ dato.name }}</td>
+                                    <td>
+                                        {% for dato in dato.permissions.all %}
+                                        <li class="badge badge-pill badge-info">{{ dato }}</li>
+                                        {% endfor %}
+                                    </td>
 
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">

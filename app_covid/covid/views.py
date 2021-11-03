@@ -7,7 +7,8 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.core import signing
+
+from django.contrib.auth.hashers import make_password
 #MODELS
 from .models import Menu, Group, User
 #FORMS
@@ -21,9 +22,9 @@ class Dashboard_view(LoginRequiredMixin,TemplateView):
         context = super().get_context_data(**kwargs)
         context['titulo'] ="Menú Principal"
         if self.request.user.is_superuser:
-            context['menu'] = Menu.objects.filter(estado=True)
+            context['menu'] = Menu.objects.all()
         else:
-            context['menu'] = Menu.objects.filter(estado=True, activo = True, grupo__in=permisos)
+            context['menu'] = Menu.objects.filter( activo = True, grupo__in=permisos)
         return context
 
 #MENU
@@ -129,7 +130,6 @@ class GrupoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageM
         messages.success(self.request, self.success_message)
         return super(GrupoDeleteView, self).delete(request, *args, **kwargs)
 
-
 class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'auth.view_group'
     model = Group
@@ -141,7 +141,6 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 class UsuarioListView(LoginRequiredMixin,ListView):
     model = User
     template_name = "usuario/usuario_listar.html"
-
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
@@ -158,10 +157,9 @@ class UsuarioCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
 
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
-    
+        #estableciendo password y usuario por defecto cedula
         form.instance.username = form.cleaned_data['cedula']
-        form.instance.password =  form.cleaned_data['cedula']
-
+        form.instance.password = make_password(form.cleaned_data['cedula'])
         self.object = form.save()
         return super().form_valid(form)
 
@@ -172,6 +170,23 @@ class UsuarioCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
         context['titulo'] = "Registro de usuarios"
         return context
 
+class UsuarioUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+    model = User
+    form_class = UserForm
+    template_name = "usuario/usuario_editar.html"
+    success_url = reverse_lazy('usuario_listar')
+    success_message = 'Registro Editado Exitosamente'
+
+class UsuarioDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
+    model = User
+    form_class = UserForm
+    template_name = "usuario/usuario_eliminar.html"
+    success_url = reverse_lazy('usuario_listar')
+    success_message = 'Registro Eliminado Exitosamente'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(UsuarioDeleteView, self).delete(request, *args, **kwargs)
 
 class UsuarioDetailView(LoginRequiredMixin,DetailView):
     model = User

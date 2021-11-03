@@ -16,6 +16,14 @@
                         <td>{{object.name}}</td>
 
                     </tr>
+                    <tr>
+                        <th>Permisos</th>
+                        <td>
+                            {% for dato in object.permissions.all %}
+                            <li class="badge badge-pill badge-info">{{ dato }}</li>
+                            {% endfor %}
+                        </td>
+                    </tr>
 
 
 

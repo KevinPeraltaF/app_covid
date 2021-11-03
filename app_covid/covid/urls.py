@@ -20,7 +20,8 @@ urlpatterns = [
 
     path('usuario/', key.UsuarioListView.as_view(), name="usuario_listar") ,
     path('usuario/crear/', key.UsuarioCreateView.as_view(), name="usuario_crear") ,
-
+    path('usuario/editar/<int:pk>', key.UsuarioUpdateView.as_view(), name="usuario_editar") ,
+    path('usuario/Eliminar/<int:pk>', key.UsuarioDeleteView.as_view(), name="usuario_eliminar") ,
     path('usuario/Detalle/<int:pk>', key.UsuarioDetailView.as_view(), name="usuario_detalle") ,
 
  
