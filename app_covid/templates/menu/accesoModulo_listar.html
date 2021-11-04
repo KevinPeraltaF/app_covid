@@ -11,42 +11,30 @@
         {% endfor %}
     </div>
 </div>
+<div class="mt-2">
+    <form action="" method="GET">
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus focused">
+                    <select class="form-control select floating select2-hidden-accessible " name="grupo" id="id_grupo">
 
-<div class="row mt-2">
+                        {% for dato in grupos %}
+                        <option value="{{ dato.id}}">{{ dato.name }}</option>
+                        {% endfor %}
 
-    <div class="col-sm-12 col-4 text-right m-b-20">
-
-
-        <form action="" method="GET">
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus select-focus focused">
-                        <label class="focus-label">Menú por:</label>
-                        <select class="form-control select floating select2-hidden-accessible " name="grupo" id="id_grupo">
-
-                            {% for dato in grupos %}
-                            <option value="{{ dato.id}}">{{ dato.name }}</option>
-                            {% endfor %}
-
-                        </select>
-
-                    </div>
-                </div>
-
-
-                <div class="col-sm-6 col-md-3">
-                    <button type="submit" class="btn btn-primary btn-block"> Filtrar </button>
+                    </select>
                 </div>
             </div>
 
 
+            <div class="col-sm-6 col-md-3">
+                <button type="submit" class="btn btn-primary btn-block"> Filtrar </button>
+            </div>
+        </div>
 
-        </form>
-
-
-    </div>
-
+    </form>
 </div>
+
 <div class="row ">
     <div class="col-md-12">
         <div class="table-responsive">
