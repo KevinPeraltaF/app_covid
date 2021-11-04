@@ -12,26 +12,25 @@
     </div>
 </div>
 
-<div class=" mt-3">
+<div class="mt-2">
     <form action="" method="GET">
         <div class="row filter-row">
             <div class="col-sm-6 col-md-3">
                 <div class="form-group form-focus select-focus focused">
                     <input type="text" name="buscar" id="id_buscar" class="form-control float-right" placeholder="Buscar">
-
                 </div>
             </div>
 
 
             <div class="col-sm-6 col-md-3">
-                <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
+                <button type="submit" class="btn btn-primary btn-block"> Filtrar </button>
             </div>
         </div>
 
     </form>
 </div>
 
-<div class="row mt-2">
+<div class="row ">
 
     <div class="col-sm-12 col-12 text-right m-b-20">
         {% if perms.covid.add_menu %}
@@ -116,9 +115,40 @@
                             </tbody>
                         </table>
                     </div>
+
+
                 </div>
 
             </div>
+        </div>
+
+        <div class="container-fluid">
+            <!-- /paginador -->
+            <ul class="pagination pagination-sm m-0 float-right">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mt-2">
+
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                        {% endif %} {% for i in page_obj.paginator.page_range %} {% if i == page_obj.number %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endif %} {% endfor %} {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </ul>
         </div>
     </div>
 </div>

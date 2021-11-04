@@ -12,13 +12,12 @@ class MenuForm(forms.ModelForm):
         
         for visible in self.visible_fields():
             self.fields['grupo'].widget.attrs['class'] = "duallistbox"
-            visible.field.widget.attrs['class'] = 'form-control '
+            visible.field.widget.attrs['class'] = 'form-control form-control  form-row ' 
     class Meta:
         model = Menu
         fields = '__all__'
-        
-    
         exclude=("usuario_creacion","usuario_modificacion",)
+        field_order = ['is_active', 'is_staff','is_superuser',]
            
 class GrupoForm(forms.ModelForm):
 

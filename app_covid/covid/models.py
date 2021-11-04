@@ -70,8 +70,8 @@ class Menu(ModeloBase):
 
 
 class Menu_Groups(models.Model):
-    group = models.ForeignKey(Group,on_delete=models.PROTECT)
-    menu = models.ForeignKey(Menu,on_delete=models.PROTECT)
+    group = models.ForeignKey(Group,on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu,on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
 
   

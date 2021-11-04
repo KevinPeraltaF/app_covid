@@ -30,6 +30,7 @@ class Dashboard_view(LoginRequiredMixin,TemplateView):
 #MENU
 class MenuListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_menu'
+    paginate_by = 7
     model = Menu
     template_name = "menu/menu_listar.html"
 
@@ -97,6 +98,7 @@ class MenuDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 #ACCESO A MODULOS DE ACUERDO AL GRUPO
 class Menu_AccesoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_menu_groups'
+    paginate_by = 7
     model = Menu_Groups
     template_name = "menu/accesoModulo_listar.html"
     
@@ -113,7 +115,7 @@ class Menu_AccesoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['titulo'] = " Acceso a Módulos"
+        context['titulo'] = " Acceso a Módulo"
         context['grupos'] = Group.objects.all()
        
         return context
@@ -125,9 +127,19 @@ class Menu_AccesoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMe
     template_name = "menu/accesoModulo_editar.html"
     success_url = reverse_lazy('menuAcceso_listar')
     success_message = 'Registro Editado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Acceso a Módulo - Estado"
+        return context
+
+
 #GRUPOS
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'auth.view_group'
+    paginate_by = 7
     model = Group
     template_name = "grupo/grupo_listar.html"
 
@@ -169,6 +181,13 @@ class GrupoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageM
     success_url = reverse_lazy('grupo_listar')
     success_message = 'Registro Editado Exitosamente'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Grupos de usuarios"
+        return context
+
 class GrupoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'auth.delete_group'
     model = Group
@@ -188,6 +207,7 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 #USUARIOS
 class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_user'
+    paginate_by = 7
     model = User
     template_name = "usuario/usuario_listar.html"
 

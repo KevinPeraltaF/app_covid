@@ -2,7 +2,7 @@
 <div class="content">
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <h4 class="page-title">{{ titulo }}</h4>
+
             {% if form.errors %}
 
             <div class="alert alert-danger" role="alert">
@@ -22,7 +22,7 @@
     </div>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" class="card-box" enctype="multipart/form-data">
                 <div class="row">
 
                     {% include "form_snippet.html" %}
