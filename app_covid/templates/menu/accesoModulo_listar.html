@@ -22,23 +22,23 @@
                 <ul>
                     {% for dato in grupos %}
                     <li><a href="">{{ dato.name }}</a></li>
-                    {% endfor %}
+                    <input type="hidden" name="buscar" id="buscarR" value="{{ dato.id }}"> {% endfor %}
 
 
                 </ul>
             </div>
         </div>
-        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-9">
-            <h6 class="card-title m-b-20">Acceso a Módulos</h6>
-            <div class="m-b-30">
-                <ul class="list-group">
+        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-9 ">
+            <h6 class="card-title m-b-20 ">Acceso a Módulos</h6>
+            <div class="m-b-30 ">
+                <ul class="list-group ">
 
                     {% for dato in object_list%}
-                    <li class="list-group-item">
+                    <li class="list-group-item ">
                         {{ dato.menu }}
-                        <div class="material-switch float-right">
-                            <input id="staff_module" type="checkbox" {% if dato.activo %} checked {% endif %}>
-                            <label for="staff_module" class="badge-success"></label>
+                        <div class="material-switch float-right ">
+                            <input id="staff_module " type="checkbox " {% if dato.activo %} checked {% endif %}>
+                            <label for="staff_module " class="badge-success "></label>
                         </div>
                     </li>
                     {% endfor %}

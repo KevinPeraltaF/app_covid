@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 #MODELS
 from .models import Menu, Group, User,Menu_Groups
@@ -83,11 +83,22 @@ class MenuDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = Menu
     template_name = "menu/menu_detalle.html"
 
-
+#ACCESO A MODULOS DE ACUERDO AL GRUPO
 class Menu_AccesoListView(LoginRequiredMixin,ListView):
-    
+
     model = Menu_Groups
     template_name = "menu/accesoModulo_listar.html"
+    
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = None
+        if busqueda:
+            queryset = Menu.objects.filter(
+                Q(id__icontains= busqueda)
+                ).distinct()
+        return queryset
+
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
@@ -95,8 +106,6 @@ class Menu_AccesoListView(LoginRequiredMixin,ListView):
         context['titulo'] = " Acceso a Módulos"
         context['grupos'] = Group.objects.all()
         return context
-
-
 
 
 #GRUPOS
@@ -154,7 +163,8 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 
 
 #USUARIOS
-class UsuarioListView(LoginRequiredMixin,ListView):
+class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_user'
     model = User
     template_name = "usuario/usuario_listar.html"
     def get_context_data(self, **kwargs):
@@ -164,7 +174,8 @@ class UsuarioListView(LoginRequiredMixin,ListView):
         context['titulo'] = "Registro de usuarios"
         return context
 
-class UsuarioCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
+class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = 'covid.add_user'
     model = User
     form_class = UserForm
     template_name = "usuario/usuario_crear.html"
@@ -186,14 +197,16 @@ class UsuarioCreateView(LoginRequiredMixin,SuccessMessageMixin,CreateView):
         context['titulo'] = "Registro de usuarios"
         return context
 
-class UsuarioUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_user'
     model = User
     form_class = UserForm
     template_name = "usuario/usuario_editar.html"
     success_url = reverse_lazy('usuario_listar')
     success_message = 'Registro Editado Exitosamente'
 
-class UsuarioDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = 'covid.delete_user'
     model = User
     form_class = UserForm
     template_name = "usuario/usuario_eliminar.html"
@@ -204,7 +217,8 @@ class UsuarioDeleteView(LoginRequiredMixin,SuccessMessageMixin,DeleteView):
         messages.success(self.request, self.success_message)
         return super(UsuarioDeleteView, self).delete(request, *args, **kwargs)
 
-class UsuarioDetailView(LoginRequiredMixin,DetailView):
+class UsuarioDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = 'covid.view_user'
     model = User
     template_name = "usuario/usuario_detalle.html"
 
