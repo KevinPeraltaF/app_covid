@@ -7,6 +7,7 @@ urlpatterns = [
     path('', key.Dashboard_view.as_view(), name="dashboard" ),
     path('menu/', key.MenuListView.as_view(), name="menu_listar") ,
     path('menu/acceso/', key.Menu_AccesoListView.as_view(), name="menuAcceso_listar") ,
+    path('menu/acceso/editar/<int:pk>', key.Menu_AccesoUpdateView.as_view(), name="menuAcceso_editar") ,
     path('menu/crear/', key.MenuCreateView.as_view(), name="menu_crear") ,
     path('menu/editar/<int:pk>', key.MenuUpdateView.as_view(), name="menu_editar") ,
     path('menu/Eliminar/<int:pk>', key.MenuDeleteView.as_view(), name="menu_eliminar") ,

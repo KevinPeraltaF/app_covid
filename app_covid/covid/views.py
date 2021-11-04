@@ -22,9 +22,9 @@ class Dashboard_view(LoginRequiredMixin,TemplateView):
         context = super().get_context_data(**kwargs)
         context['titulo'] ="Menú Principal"
         if self.request.user.is_superuser:
-            context['menu'] = Menu.objects.all()
+            context['MenuSuperUser'] = Menu.objects.all()
         else:
-            context['menu'] = Menu.objects.filter( activo = True, grupo__in=permisos)
+            context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
         return context
 
 #MENU
@@ -32,6 +32,17 @@ class MenuListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_menu'
     model = Menu
     template_name = "menu/menu_listar.html"
+
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = Menu.objects.all()
+        if busqueda:
+            queryset = Menu.objects.filter(
+                Q(titulo__icontains= busqueda)|
+                Q(descripcion__icontains= busqueda)
+                ).distinct()
+        return queryset
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
@@ -84,20 +95,19 @@ class MenuDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     template_name = "menu/menu_detalle.html"
 
 #ACCESO A MODULOS DE ACUERDO AL GRUPO
-class Menu_AccesoListView(LoginRequiredMixin,ListView):
-
+class Menu_AccesoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_menu_groups'
     model = Menu_Groups
     template_name = "menu/accesoModulo_listar.html"
     
     def get_queryset(self):
-        busqueda = self.request.GET.get("buscar")
-        queryset = None
+        busqueda = self.request.GET.get("grupo")
+        queryset = Menu_Groups.objects.all()
         if busqueda:
-            queryset = Menu.objects.filter(
-                Q(id__icontains= busqueda)
+            queryset = Menu_Groups.objects.filter(
+                Q(group__id__icontains= busqueda)
                 ).distinct()
         return queryset
-
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -105,15 +115,30 @@ class Menu_AccesoListView(LoginRequiredMixin,ListView):
         # Add in a QuerySet of all the books
         context['titulo'] = " Acceso a Módulos"
         context['grupos'] = Group.objects.all()
+       
         return context
 
-
+class Menu_AccesoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_menu_groups'
+    model = Menu_Groups
+    form_class = MenuGrupoForm
+    template_name = "menu/accesoModulo_editar.html"
+    success_url = reverse_lazy('menuAcceso_listar')
+    success_message = 'Registro Editado Exitosamente'
 #GRUPOS
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'auth.view_group'
     model = Group
     template_name = "grupo/grupo_listar.html"
 
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = Group.objects.all()
+        if busqueda:
+            queryset = Group.objects.filter(
+                Q(name__icontains= busqueda)
+                ).distinct()
+        return queryset
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
@@ -160,13 +185,26 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = Group
     template_name = "grupo/grupo_detalle.html"
 
-
-
 #USUARIOS
 class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_user'
     model = User
     template_name = "usuario/usuario_listar.html"
+
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = User.objects.all()
+        if busqueda:
+            queryset = User.objects.filter(
+                Q(cedula__icontains= busqueda)|
+                Q(email__icontains= busqueda)|
+                Q(username__icontains= busqueda)|
+                Q(first_name__icontains= busqueda)|
+                Q(last_name__icontains= busqueda)
+                ).distinct()
+        return queryset
+
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)

@@ -12,41 +12,91 @@
     </div>
 </div>
 
+<div class="row mt-2">
 
-<div class="content">
-
-    <div class="row">
-        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3">
-            <a href="{% url 'grupo_crear'%}" class="btn btn-primary btn-block"><i class="fa fa-plus"></i> Añadir Grupo</a>
-            <div class="roles-menu">
-                <ul>
-                    {% for dato in grupos %}
-                    <li><a href="">{{ dato.name }}</a></li>
-                    <input type="hidden" name="buscar" id="buscarR" value="{{ dato.id }}"> {% endfor %}
+    <div class="col-sm-12 col-4 text-right m-b-20">
 
 
-                </ul>
-            </div>
-        </div>
-        <div class="col-sm-8 col-md-8 col-lg-8 col-xl-9 ">
-            <h6 class="card-title m-b-20 ">Acceso a Módulos</h6>
-            <div class="m-b-30 ">
-                <ul class="list-group ">
+        <form action="" method="GET">
+            <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group form-focus select-focus focused">
+                        <label class="focus-label">Menú por:</label>
+                        <select class="form-control select floating select2-hidden-accessible " name="grupo" id="id_grupo">
 
-                    {% for dato in object_list%}
-                    <li class="list-group-item ">
-                        {{ dato.menu }}
-                        <div class="material-switch float-right ">
-                            <input id="staff_module " type="checkbox " {% if dato.activo %} checked {% endif %}>
-                            <label for="staff_module " class="badge-success "></label>
-                        </div>
-                    </li>
-                    {% endfor %}
+                            {% for dato in grupos %}
+                            <option value="{{ dato.id}}">{{ dato.name }}</option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+                </div>
 
 
-                </ul>
+                <div class="col-sm-6 col-md-3">
+                    <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
+                </div>
             </div>
 
+
+
+        </form>
+
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-border table-striped custom-table  mb-0  no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                                <tr>
+                                    <th>Grupo</th>
+                                    <th>Menú</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dato in object_list %}
+                                <tr>
+                                    <td>{{ dato.group }}</td>
+
+                                    <td>{{ dato.menu }}</td>
+                                    <td>
+                                        {% if dato.activo == True%}
+                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="Activo"><span class="fa fa-check "></span></a> {% else %}
+                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="Activo"><span class="fa fa-times "></span></a> {% endif %}
+                                    </td>
+
+
+
+
+                                    <td class="text-right">
+                                        <div class="dropdown dropdown-action">
+                                            <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                {% if perms.covid.change_menu_groups %}
+                                                <a class="dropdown-item" href="{% url 'menuAcceso_editar' dato.id%}"><i
+                                                        class="fa fa-pencil m-r-5"></i> Cambiar Estado</a> {% endif %}
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
@@ -55,4 +105,15 @@
 
 
 
-{% endblock %} {% block content_extra_js %} {% endblock content_extra_js %}
+{% endblock %} {% block content_extra_js %}
+<script>
+    /** funcion para abrir el modal de eliminar */
+    function abrirModalCambiarEstado(url) {
+
+        $('#cambiarEstado').load(url, function() {
+            $('#cambiarEstado').modal('show');
+        })
+    }
+</script>
+
+{% endblock content_extra_js %}

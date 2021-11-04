@@ -47,9 +47,17 @@ class UserForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
     
 class MenuGrupoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MenuGrupoForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+
     class Meta:
         model = Menu_Groups
         fields = '__all__'
+        exclude=("group","menu",)
         
 
             

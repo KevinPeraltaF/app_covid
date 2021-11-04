@@ -11,6 +11,25 @@
         {% endfor %}
     </div>
 </div>
+<div class=" mt-3">
+    <form action="" method="GET">
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus focused">
+                    <input type="text" name="buscar" id="id_buscar" class="form-control float-right" placeholder="Buscar">
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3">
+                <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
+            </div>
+        </div>
+
+
+    </form>
+</div>
 <div class="row mt-2">
 
     <div class="col-sm-12 col-12 text-right m-b-20">
@@ -36,6 +55,7 @@
                                     <th>Nombres</th>
                                     <th>Grupo</th>
                                     <th>Email</th>
+                                    <th>Cédula</th>
                                     <th style="width: 30.125px;">Activo</th>
                                     <th>Staff status</th>
                                     <th>Superuser status</th>
@@ -58,6 +78,7 @@
                                     </td>
 
                                     <td>{{ dato.email }}</td>
+                                    <td>{{ dato.cedula }}</td>
                                     <td>
                                         {% if dato.is_active == True %}
                                         <a class="badge " data-toggle="tooltip" data-placement="top" title="activo"><span class="fa fa-check "></span></a> {% else %}
