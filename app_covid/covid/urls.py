@@ -26,6 +26,9 @@ urlpatterns = [
     path('usuario/Eliminar/<int:pk>', key.UsuarioDeleteView.as_view(), name="usuario_eliminar") ,
     path('usuario/Detalle/<int:pk>', key.UsuarioDetailView.as_view(), name="usuario_detalle") ,
 
- 
+
+    path('MyPerfil/', key.PerfilUpdateView.as_view(), name="perfilUsuario") ,
+    path('MyPerfil/change-password/', key.PasswordChangeView.as_view(),name="CambiarContraseña" ),
+  
 
 ]

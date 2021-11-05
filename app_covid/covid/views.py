@@ -1,7 +1,7 @@
 #DJANGO
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
+from django.views.generic.edit import (CreateView, UpdateView, DeleteView,FormView)
 from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
@@ -9,11 +9,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.views import PasswordChangeView
 #MODELS
 from .models import Menu, Group, User,Menu_Groups
 #FORMS
-from .forms import  MenuForm,GrupoForm, UserForm,MenuGrupoForm
-
+from .forms import  MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm
+#auditoria - crum django
+from crum import get_current_user
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
     template_name = "registration/dashboard.html"
@@ -135,7 +137,6 @@ class Menu_AccesoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMe
         context['titulo'] = "Acceso a Módulo - Estado"
         return context
 
-
 #GRUPOS
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'auth.view_group'
@@ -240,6 +241,13 @@ class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
     success_url = reverse_lazy('usuario_listar')
     success_message = 'Registro Guardado Exitosamente'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de usuarios"
+        return context
+
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
         #estableciendo password y usuario por defecto cedula
@@ -263,6 +271,13 @@ class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
     success_url = reverse_lazy('usuario_listar')
     success_message = 'Registro Editado Exitosamente'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de usuarios"
+        return context
+
 class UsuarioDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_user'
     model = User
@@ -280,7 +295,38 @@ class UsuarioDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = User
     template_name = "usuario/usuario_detalle.html"
 
+#PERFIL DE USUARIO
 
+class PerfilUpdateView(LoginRequiredMixin,SuccessMessageMixin,UpdateView):
+    model = User
+    form_class = PerfilForm
+    template_name = "usuario/perfilUsuario.html"
+    success_url = reverse_lazy('perfilUsuario')
+    success_message = 'Perfil Editado Exitosamente'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_object(self, queryset = None):
+        return self.request.user
 
+        
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "My Perfil"
+        return context
+#cambiar contraseña
+class PasswordChangeView(PasswordChangeView):
+  template_name = 'usuario/cambiarContraseña.html'
+  form_class = CambiarContraseñaForm
+  success_url =reverse_lazy('logout')
 
+  def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Cambiar Contraseña"
+        return context

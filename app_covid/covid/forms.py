@@ -1,5 +1,6 @@
 #DJANGO
 from django import forms
+from django.contrib.auth.forms import PasswordChangeForm
 #MODELS
 from .models import Menu,Group,Permission,User,Menu_Groups
 
@@ -60,5 +61,31 @@ class MenuGrupoForm(forms.ModelForm):
         
 
             
+class PerfilForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PerfilForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+    class Meta:
+        model = User
+        fields = '__all__'
+        exclude=("password","last_login","user_permissions","date_joined","username","groups","is_active","is_staff","is_superuser")
+
+
+  
+        
+class CambiarContraseñaForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+                # Le añadimos clases CSS a los inputs
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+
 
         
+
+   
+    
+    

@@ -27,37 +27,41 @@
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown"></span><span>{{ request.user }}</span></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="profile.html">My Perfil</a>
-                        <a class="dropdown-item" href="edit-profile.html">Editar Perfil</a>
-                        <a class="dropdown-item" target="_blank" href="/admin">Django</a>
-                        <a class="dropdown-item" href="{% url 'logout'%}">Cerrar
+                        <a class="dropdown-item" href="{% url 'perfilUsuario' %}">Perfil</a> {% if user.is_staff%}
+                        <a class="dropdown-item" target="_blank" href="/admin">Django</a> {% endif %}
+
+
+                        <a class="dropdown-item " href="{% url 'logout'%} ">Cerrar
                             Sesión</a>
                     </div>
                 </li>
             </ul>
-            <div class="dropdown mobile-user-menu float-right">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v"></i></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="profile.html">My
-                        Perfil</a><a class="dropdown-item" href="edit-profile.html">Editar Perfil</a><a class="dropdown-item" target="_blank" href="/admin">Django</a>
-                    <a class="dropdown-item" href="{% url 'logout'%}">Cerrar Sesión</a>
+            <div class="dropdown mobile-user-menu float-right ">
+                <a href="# " class="nav-link dropdown-toggle " data-toggle="dropdown " aria-expanded="false ">
+                    <i class="fa fa-ellipsis-v "></i></a>
+                <div class="dropdown-menu dropdown-menu-right ">
+                    <a class="dropdown-item " href="{% url 'perfilUsuario' %} ">Perfil</a> {% if user.is_staff %}
+                    <a class="dropdown-item " target="_blank " href="/admin ">Django</a> {% endif %}
+
+
+
+                    <a class="dropdown-item " href="{% url 'logout'%} ">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
 
-        <div class="page-wrapper">
+        <div class="page-wrapper ">
 
-            <div class="content">
-                <div class="row mb-2">
-                    <div class="col-sm-8">
-                        <h1 class="m-0 text-dark">{{ titulo.upper }}</h1>
+            <div class="content ">
+                <div class="row mb-2 ">
+                    <div class="col-sm-8 ">
+                        <h1 class="m-0 text-dark ">{{ titulo.upper }}</h1>
                     </div>
                     <!-- /.col -->
-                    <div class="col-sm-4">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{% url 'dashboard'%}">Inicio</a></li>
-                            <li class="breadcrumb-item active">Menú</li>
+                    <div class="col-sm-4 ">
+                        <ol class="breadcrumb float-sm-right ">
+                            <li class="breadcrumb-item "><a href="{% url 'dashboard'%} ">Inicio</a></li>
+                            <li class="breadcrumb-item active ">Menú</li>
                         </ol>
                     </div>
                     <!-- /.col -->
@@ -69,15 +73,15 @@
 
         </div>
     </div>
-    <div class="sidebar-overlay" data-reff=""></div>
+    <div class="sidebar-overlay " data-reff=" "></div>
 
 
-    <script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
-    <script src="{% static 'js/popper.min.js'%}"></script>
-    <script src="{% static 'js/bootstrap.min.js'%}"></script>
-    <script src="{% static 'js/jquery.slimscroll.js'%}"></script>
-    <script src="{% static 'js/app.js'%}"></script>
-    <script src="{% static 'js/jquery.bootstrap-duallistbox.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.2.1.min.js'%} "></script>
+    <script src="{% static 'js/popper.min.js'%} "></script>
+    <script src="{% static 'js/bootstrap.min.js'%} "></script>
+    <script src="{% static 'js/jquery.slimscroll.js'%} "></script>
+    <script src="{% static 'js/app.js'%} "></script>
+    <script src="{% static 'js/jquery.bootstrap-duallistbox.min.js' %} "></script>
     <script>
         //Bootstrap Duallistbox
         $('.duallistbox').bootstrapDualListbox()
