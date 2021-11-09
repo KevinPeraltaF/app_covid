@@ -51,7 +51,9 @@
                                     <th>Nombres</th>
                                     <th>Email</th>
                                     <th>Cédula</th>
+                                    <th>Género</th>
                                     <th>Especialidad</th>
+                                    <th>Activo</th>
                                     <th>Grupo</th>
                                 </tr>
                             </thead>
@@ -61,7 +63,14 @@
                                     <td>{{ dato.usuario.last_name }} {{ dato.usuario.first_name }}</td>
                                     <td>{{ dato.usuario.email }}</td>
                                     <td>{{ dato.usuario.cedula }}</td>
+                                    <td>{{ dato.usuario.genero }}</td>
                                     <td>{{ dato.especialidad }}</td>
+                                    <td>
+                                        {% if dato.usuario.is_active == True %}
+                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="activo"><span class="fa fa-check "></span></a> {% else %}
+                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="activo"><span
+                                                class="fa fa-times "></span></a> {% endif %}
+                                    </td>
                                     <td>
 
                                         {% for dato in dato.usuario.groups.all %}

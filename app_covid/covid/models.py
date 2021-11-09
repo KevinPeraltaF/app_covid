@@ -3,10 +3,15 @@ from django.db import models
 from django.contrib.auth.models import Group, AbstractUser, Permission
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
+
+import os
+from django.db.models.signals import pre_delete, post_delete, pre_save
+from django.conf import settings
+from django.dispatch import receiver
+
+
 #auditoria - crum django
 from crum import get_current_user
-
-
 
 
 #MODELO BASE - CLASE ABSTRACTA
@@ -33,15 +38,10 @@ class ModeloBase(models.Model):
 
 
 class User(AbstractUser,ModeloBase):
-    cedula=models.CharField(max_length=10, verbose_name='Cédula')
+    cedula=models.CharField(max_length=10, verbose_name='Cédula', unique = True)
     tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
     
-    def save(self):
-        self.username = self.cedula
-        self.password = make_password(self.cedula)
-        super (User, self).save()
-        
 
 #Especialidad
 class EspecialidadMedico(ModeloBase):
@@ -68,8 +68,6 @@ class Menu(ModeloBase):
     descripcion = models.CharField( verbose_name='Descripciòn',max_length=200)
     icono = models.ImageField(verbose_name="icono", upload_to='icon/')
     url = models.CharField(verbose_name='Url', max_length=200)
-    es_modulo_principal = models.BooleanField(default=False ,verbose_name='¿Es módulo principal?')
-    principal = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     grupo = models.ManyToManyField(Group, through='Menu_Groups', verbose_name='Grupos de usuario')
     activo = models.BooleanField(default=True)
 
@@ -87,7 +85,38 @@ class Menu(ModeloBase):
         self.titulo = self.titulo.lower().strip()
         self.descripcion = self.descripcion.lower().strip()
         return super(Menu, self).save(*args, **kwargs)
+    
+    
+    
+@receiver(post_delete, sender=Menu)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Deletes file from filesystem when corresponding `MediaFile` object
+        is deleted."""
+    ruta = settings.MEDIA_ROOT +"\\"+ str(instance.icono)
+    if ruta:
+        if os.path.isfile(ruta):
+            os.remove(ruta)
+                           
+@receiver(pre_save, sender=Menu)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """Deletes old file from filesystem when corresponding `MediaFile`
+        object is updated with new file."""
+    if not instance.pk:
+         return False
+    if not instance.pk:
+        return False
 
+    try:
+        old_file = Menu.objects.get(pk=instance.pk).icono
+    except Menu.DoesNotExist:
+        return False
+
+    new_file = instance.icono
+    if not old_file == new_file:
+        ruta = settings.MEDIA_ROOT +"\\"+ str(old_file)
+        if os.path.isfile(ruta):
+            os.remove(ruta)
+                
 class Menu_Groups(models.Model):
     group = models.ForeignKey(Group,on_delete=models.CASCADE)
     menu = models.ForeignKey(Menu,on_delete=models.CASCADE)

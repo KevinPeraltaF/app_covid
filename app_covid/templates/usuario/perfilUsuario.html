@@ -19,9 +19,21 @@
         <div class="col-md-6">
             <div class="card card-outline-secondary">
                 <div class="card-header">
-                    <h3 class="mb-0">Mi Información</h3>
+                    <h3 class="mb-0">Mi Información
+                    </h3>
                 </div>
                 <div class="card-body">
+                    <div>
+                        <h3>
+
+                            {% if request.user.is_superuser %}
+                            <li class="badge badge-pill badge-info">SuperUsuario</li>
+                            {% endif %} {% for dato in request.user.groups.all %}
+                            <li class="badge badge-pill badge-info">{{ dato }}</li>
+                            {% endfor %}
+                        </h3>
+
+                    </div>
                     <form class="form" role="form" autocomplete="off" method="post" action="{% url 'perfilUsuario'  %}" enctype="multipart/form-data">
                         {% include "form_snippet.html" %}
                         <div class="form-group">

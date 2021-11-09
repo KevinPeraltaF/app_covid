@@ -43,4 +43,10 @@ urlpatterns = [
     path('medico/editar/<int:pk>', key.MedicoUpdateView.as_view(), name="medico_editar") ,
     path('medico/Eliminar/<int:pk>', key.MedicoDeleteView.as_view(), name="medico_eliminar") ,
     path('medico/Detalle/<int:pk>', key.MedicoDetailView.as_view(), name="medico_detalle") ,
+    
+    path('paciente/', key.PacienteListView.as_view(), name="paciente_listar") ,
+    path('paciente/crear/', key.PacienteCreateView.as_view(), name="paciente_crear") ,
+    path('paciente/editar/<int:pk>', key.PacienteUpdateView.as_view(), name="paciente_editar") ,
+    path('paciente/Eliminar/<int:pk>', key.PacienteDeleteView.as_view(), name="paciente_eliminar") ,
+    path('paciente/Detalle/<int:pk>', key.PacienteDetailView.as_view(), name="paciente_detalle") ,
 ]

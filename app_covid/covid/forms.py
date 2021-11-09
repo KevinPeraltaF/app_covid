@@ -11,8 +11,6 @@ class MenuForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MenuForm, self).__init__(*args, **kwargs)
         
-        self.fields["principal"].queryset = Menu.objects.filter(es_modulo_principal=True, principal__isnull= True)
-        
         for visible in self.visible_fields():
             self.fields['grupo'].widget.attrs['class'] = "duallistbox"
             visible.field.widget.attrs['class'] = 'form-control form-control  form-row ' 
@@ -71,8 +69,7 @@ class PerfilForm(forms.ModelForm):
         model = User
         fields = '__all__'
         exclude=("password","last_login","user_permissions","date_joined","username","groups","is_active","is_staff","is_superuser")
-  
-        
+       
 class CambiarContraseñaForm(PasswordChangeForm):
 
     def __init__(self, *args, **kwargs):
@@ -80,7 +77,6 @@ class CambiarContraseñaForm(PasswordChangeForm):
                 # Le añadimos clases CSS a los inputs
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
-
 
 class EspecialidadMedicoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -92,8 +88,6 @@ class EspecialidadMedicoForm(forms.ModelForm):
     class Meta:
         model = EspecialidadMedico
         fields = '__all__'
-  
-  
         
 class MedicoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -106,7 +100,6 @@ class MedicoForm(forms.ModelForm):
         fields = '__all__'
         exclude= ('usuario',)
         
-
 class PacienteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PacienteForm, self).__init__(*args, **kwargs)
@@ -116,6 +109,7 @@ class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
         fields = '__all__'
+        exclude= ('usuario',)
       
       
 

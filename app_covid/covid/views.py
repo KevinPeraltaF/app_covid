@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordChangeView
+from django.core.exceptions import ValidationError
 #MODELS
 from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente
 #FORMS
@@ -261,6 +262,14 @@ class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de usuarios"
         return context
+    
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        #estableciendo password y usuario por defecto cedula
+        form.instance.username = form.cleaned_data['cedula']
+        form.instance.password = make_password(form.cleaned_data['cedula'])
+        self.object = form.save()
+        return super().form_valid(form)
 
 class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_user'
@@ -452,12 +461,15 @@ class MedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
         self.object = self.get_object
         form = self.form_class(request.POST)
         form2 = self.second_form_class(request.POST)
-    
+       
         
         if  form.is_valid() and form2.is_valid():
+            form2.instance.is_active= True
+            form2.instance.username = form2.cleaned_data['cedula']
+            form2.instance.password = make_password(form2.cleaned_data['cedula'])
             Medico = form.save(commit = False)
             grupo = Group.objects.get(name="Medico")
-            
+           
             Medico.usuario = form2.save()
             Medico.usuario.groups.add(grupo) 
             Medico.save()
@@ -482,17 +494,13 @@ class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
         context['titulo'] = "Registro de Médicos"
         pk = self.kwargs.get('pk',0)
         Medico = self.model.objects.get(id=pk)
-        Usuario = self.second_model.objects.get(id=Medico.usuario_id)
-        
-        
-        
+        Usuario = self.second_model.objects.get(id=Medico.usuario_id) 
         if 'form' not in context:
             context['form'] = self.form_class()
         if 'form2' not in context:
             context['form2'] = self.second_form_class(instance=Usuario)
         context['id'] = pk 
         return context
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
@@ -533,3 +541,132 @@ class MedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 
 
 #PACIENTE
+class PacienteListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_paciente'
+    model = Paciente
+    template_name = "paciente/paciente_listar.html"
+    
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = Paciente.objects.all().order_by("pk")
+        if busqueda:
+            queryset = Paciente.objects.filter(
+                Q(usuario__cedula__icontains= busqueda)|
+                Q(usuario__email__icontains= busqueda)|
+                Q(usuario__first_name__icontains= busqueda)|
+                Q(usuario__last_name__icontains= busqueda)
+                ).distinct().order_by("pk")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Pacientes"
+        return context
+
+class PacienteCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = 'covid.add_paciente'
+    model = Paciente
+    form_class = PacienteForm
+    second_form_class = UserForm
+    template_name = "paciente/paciente_crear.html"
+    success_url = reverse_lazy('paciente_listar')
+    success_message = 'Registro Guardado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Pacientes"
+        
+        if 'form' not in context:
+            context['form'] = self.form_class(self.request.GET)
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(self.request.GET)
+            
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        form = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST)
+    
+        
+        if  form.is_valid() and form2.is_valid():
+            form2.instance.is_active= True
+            form2.instance.username = form2.cleaned_data['cedula']
+            form2.instance.password = make_password(form2.cleaned_data['cedula'])
+            Paciente = form.save(commit = False)
+            grupo = Group.objects.get(name="Paciente")
+            
+            Paciente.usuario = form2.save()
+            Paciente.usuario.groups.add(grupo) 
+            Paciente.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else :
+            return self.render_to_response(self.get_context_data(form=form,form2=form2))
+    
+class PacienteUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_paciente'
+    model = Paciente
+    second_model = User
+    form_class = PacienteForm
+    second_form_class = UserForm
+    template_name = "paciente/paciente_editar.html"
+    success_url = reverse_lazy('paciente_listar')
+    success_message = 'Registro Editado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Pacientes"
+        pk = self.kwargs.get('pk',0)
+        Paciente = self.model.objects.get(id=pk)
+        Usuario = self.second_model.objects.get(id=Paciente.usuario_id)
+        
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(instance=Usuario)
+        context['id'] = pk 
+        return context
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_paciente = kwargs['pk'] 
+        Paciente = self.model.objects.get(id=id_paciente)
+        Usuario = self.second_model.objects.get(id=Paciente.usuario_id)
+        
+        form = self.form_class(request.POST, instance = Paciente)
+        form2 = self.second_form_class(request.POST, instance = Usuario)
+    
+        
+        if  form.is_valid() and form2.is_valid():
+            form.save()
+            form2.save()
+            grupo = Group.objects.get(name="Paciente")
+            Usuario.groups.add(grupo) 
+            Usuario.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else :
+            return HttpResponseRedirect(self.get_success_url())
+        
+class PacienteDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = 'covid.delete_paciente'
+    model = Paciente
+    form_class = PacienteForm
+    template_name = "paciente/paciente_eliminar.html"
+    success_url = reverse_lazy('paciente_listar')
+    success_message = 'Registro Eliminado Exitosamente'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(PacienteDeleteView, self).delete(request, *args, **kwargs)
+
+class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = 'covid.view_paciente'
+    model = Paciente
+    template_name = "paciente/paciente_detalle.html"
