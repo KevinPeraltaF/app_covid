@@ -262,9 +262,6 @@ class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
         context['titulo'] = "Registro de usuarios"
         return context
 
-
- 
-
 class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_user'
     model = User
@@ -409,6 +406,18 @@ class MedicoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_medico'
     model = Medico
     template_name = "medico/medico_listar.html"
+    
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = Medico.objects.all().order_by("pk")
+        if busqueda:
+            queryset = Medico.objects.filter(
+                Q(usuario__cedula__icontains= busqueda)|
+                Q(usuario__email__icontains= busqueda)|
+                Q(usuario__first_name__icontains= busqueda)|
+                Q(usuario__last_name__icontains= busqueda)
+                ).distinct().order_by("pk")
+        return queryset
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -456,8 +465,6 @@ class MedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
         else :
             return self.render_to_response(self.get_context_data(form=form,form2=form2))
     
- 
-
 class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_medico'
     model = Medico
@@ -475,15 +482,38 @@ class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
         context['titulo'] = "Registro de Médicos"
         pk = self.kwargs.get('pk',0)
         Medico = self.model.objects.get(id=pk)
-        User = self.second_model.objects.get(id=Medico.usuario_id)
+        Usuario = self.second_model.objects.get(id=Medico.usuario_id)
+        
+        
         
         if 'form' not in context:
             context['form'] = self.form_class()
         if 'form2' not in context:
-            context['form2'] = self.second_form_class(instance=User)
+            context['form2'] = self.second_form_class(instance=Usuario)
         context['id'] = pk 
         return context
 
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_medico = kwargs['pk'] 
+        Medico = self.model.objects.get(id=id_medico)
+        Usuario = self.second_model.objects.get(id=Medico.usuario_id)
+        
+        form = self.form_class(request.POST, instance = Medico)
+        form2 = self.second_form_class(request.POST, instance = Usuario)
+    
+        
+        if  form.is_valid() and form2.is_valid():
+            form.save()
+            form2.save()
+            grupo = Group.objects.get(name="Medico")
+            Usuario.groups.add(grupo) 
+            Usuario.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else :
+            return HttpResponseRedirect(self.get_success_url())
+        
 class MedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_medico'
     model = Medico

@@ -1,0 +1,69 @@
+{% extends 'plantillaBase.html' %} {% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+
+            {% if form.errors %}
+
+            <div class="alert alert-danger" role="alert">
+                <h5 class="icon fas fa-bin">Error al guardar el registro!</h5>
+                <ul>
+                    {% for field in form %} {% for error in field.errors %}
+                    <li>
+                        {{error}}
+                    </li>
+                    {% endfor %} {% endfor %}
+                </ul>
+
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <form method="post" class="card-box" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.last_name.label}} {{form2.last_name}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.first_name.label}} {{form2.first_name}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.cedula.label}} {{form2.cedula}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                            {{form2.email.label}} {{form2.email}}
+                        </fieldset>
+                    </div>
+
+                    <div class="col">
+                        <fieldset class="form-group">
+                            {{form2.genero.label}} {{form2.genero}}
+                        </fieldset>
+                    </div>
+
+                    {% include "form_snippet.html" %}
+
+
+
+                </div>
+                <div class="m-t-20 text-center">
+                    <a type="button" class="btn btn-danger submit-btn" href="{% url 'medico_listar' %}">Cancelar</a>
+                    <button class="btn btn-primary submit-btn">Guardar Registro</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
