@@ -29,6 +29,13 @@ urlpatterns = [
 
     path('MyPerfil/', key.PerfilUpdateView.as_view(), name="perfilUsuario") ,
     path('MyPerfil/change-password/', key.PasswordChangeView.as_view(),name="CambiarContraseña" ),
+    
+    
+     path('especialidad/', key.EspecialidadMedicoListView.as_view(), name="especialidadMedico_listar") ,
+    path('especialidad/crear/', key.EspecialidadMedicoCreateView.as_view(), name="especialidadMedico_crear") ,
+    path('especialidad/editar/<int:pk>', key.EspecialidadMedicoUpdateView.as_view(), name="especialidadMedico_editar") ,
+    path('especialidad/Eliminar/<int:pk>', key.EspecialidadMedicoDeleteView.as_view(), name="especialidadMedico_eliminar") ,
+    path('especialidad/Detalle/<int:pk>', key.EspecialidadMedicoDetailView.as_view(), name="especialidadMedico_detalle") ,
   
 
 ]

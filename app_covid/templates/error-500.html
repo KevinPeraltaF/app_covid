@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>LabCov - Medical</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-duallistbox.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css'%}"> {% block content_extra_css %} {% endblock content_extra_css %}
+</head>
+
+<body>
+    <div class="main-wrapper error-wrapper">
+        <div class="error-box">
+            <h1>500</h1>
+            <h3><i class="fa fa-warning"></i>¡Vaya! Algo salió mal</h3>
+            <p>la página que solicitaste no se encontró.</p><a href="{% url 'dashboard'%}" class="btn btn-primary go-home">Go to
+                Home</a>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery-3.2.1.min.js'%} "></script>
+    <script src="{% static 'js/popper.min.js'%} "></script>
+    <script src="{% static 'js/bootstrap.min.js'%} "></script>
+    <script src="{% static 'js/jquery.slimscroll.js'%} "></script>
+    <script src="{% static 'js/app.js'%} "></script>
+    <script src="{% static 'js/jquery.bootstrap-duallistbox.min.js' %} "></script>
+</body>
+
+</html>

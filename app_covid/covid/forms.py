@@ -1,8 +1,9 @@
 #DJANGO
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
+from django.forms.forms import Form
 #MODELS
-from .models import Menu,Group,Permission,User,Menu_Groups
+from .models import Menu,Group,Permission,User,Menu_Groups, EspecialidadMedico,Medico,Paciente
 
 class MenuForm(forms.ModelForm):
     
@@ -58,8 +59,6 @@ class MenuGrupoForm(forms.ModelForm):
         model = Menu_Groups
         fields = '__all__'
         exclude=("group","menu",)
-        
-
             
 class PerfilForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -71,8 +70,6 @@ class PerfilForm(forms.ModelForm):
         model = User
         fields = '__all__'
         exclude=("password","last_login","user_permissions","date_joined","username","groups","is_active","is_staff","is_superuser")
-
-
   
         
 class CambiarContraseñaForm(PasswordChangeForm):
@@ -83,6 +80,43 @@ class CambiarContraseñaForm(PasswordChangeForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
 
+
+class EspecialidadMedicoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EspecialidadMedicoForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+            
+    class Meta:
+        model = EspecialidadMedico
+        fields = '__all__'
+  
+  
+        
+class MedicoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MedicoForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+    class Meta:
+        model = Medico
+        fields = '__all__'
+        
+
+class PacienteForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PacienteForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+    class Meta:
+        model = Paciente
+        fields = '__all__'
+      
+      
+    
 
         
 

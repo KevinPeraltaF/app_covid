@@ -11,9 +11,9 @@ from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordChangeView
 #MODELS
-from .models import Menu, Group, User,Menu_Groups
+from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente
 #FORMS
-from .forms import  MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm
+from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm
 #auditoria - crum django
 from crum import get_current_user
 #MY VIEWS
@@ -29,21 +29,36 @@ class Dashboard_view(LoginRequiredMixin,TemplateView):
             context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
         return context
 
+class Error404View(TemplateView):
+    template_name = 'error-404.html'
+
+class Error500View(TemplateView):
+    template_name = 'error-500.html'
+
+    @classmethod
+    def as_error_view(clase):
+        objeto = clase.as_view()
+        def view(request):
+            result = objeto(request)
+            result.render()
+            return result
+        return view
+
 #MENU
 class MenuListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_menu'
-    paginate_by = 7
+    ordering = ['id']
     model = Menu
     template_name = "menu/menu_listar.html"
 
     def get_queryset(self):
         busqueda = self.request.GET.get("buscar")
-        queryset = Menu.objects.all()
+        queryset = Menu.objects.all().order_by("pk")
         if busqueda:
             queryset = Menu.objects.filter(
                 Q(titulo__icontains= busqueda)|
                 Q(descripcion__icontains= busqueda)
-                ).distinct()
+                ).distinct().order_by("pk")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -106,11 +121,11 @@ class Menu_AccesoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     
     def get_queryset(self):
         busqueda = self.request.GET.get("grupo")
-        queryset = Menu_Groups.objects.all()
+        queryset = Menu_Groups.objects.all().order_by("pk")
         if busqueda:
             queryset = Menu_Groups.objects.filter(
                 Q(group__id__icontains= busqueda)
-                ).distinct()
+                ).distinct().order_by("pk")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -140,17 +155,16 @@ class Menu_AccesoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMe
 #GRUPOS
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'auth.view_group'
-    paginate_by = 7
     model = Group
     template_name = "grupo/grupo_listar.html"
 
     def get_queryset(self):
         busqueda = self.request.GET.get("buscar")
-        queryset = Group.objects.all()
+        queryset = Group.objects.all().order_by("pk")
         if busqueda:
             queryset = Group.objects.filter(
                 Q(name__icontains= busqueda)
-                ).distinct()
+                ).distinct().order_by("pk")
         return queryset
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -208,13 +222,12 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 #USUARIOS
 class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_user'
-    paginate_by = 7
     model = User
     template_name = "usuario/usuario_listar.html"
 
     def get_queryset(self):
         busqueda = self.request.GET.get("buscar")
-        queryset = User.objects.all()
+        queryset = User.objects.all().order_by("pk")
         if busqueda:
             queryset = User.objects.filter(
                 Q(cedula__icontains= busqueda)|
@@ -222,7 +235,7 @@ class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
                 Q(username__icontains= busqueda)|
                 Q(first_name__icontains= busqueda)|
                 Q(last_name__icontains= busqueda)
-                ).distinct()
+                ).distinct().order_by("pk")
         return queryset
 
 
@@ -256,12 +269,7 @@ class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
         self.object = form.save()
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        context['titulo'] = "Registro de usuarios"
-        return context
+ 
 
 class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_user'
@@ -330,3 +338,81 @@ class PasswordChangeView(PasswordChangeView):
         # Add in a QuerySet of all the books
         context['titulo'] = "Cambiar Contraseña"
         return context
+    
+#ESPECIALIDAD MEDICO
+    
+class EspecialidadMedicoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_especialidadmedico'
+    model = EspecialidadMedico
+    template_name = "medico/especialidadMedico_listar.html"
+
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = EspecialidadMedico.objects.all().order_by("pk")
+        if busqueda:
+            queryset = EspecialidadMedico.objects.filter(
+                Q(descripcion__icontains= busqueda)
+                ).distinct().order_by("pk")
+        return queryset
+
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de especialidades de los Médicos"
+        return context
+
+class EspecialidadMedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = 'covid.add_especialidadmedico'
+    model = EspecialidadMedico
+    form_class = EspecialidadMedicoForm
+    template_name = "medico/especialidadMedico_crear.html"
+    success_url = reverse_lazy('especialidadMedico_listar')
+    success_message = 'Registro Guardado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Especialidades de los Médicos"
+        return context
+
+  
+
+class EspecialidadMedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_especialidadmedico'
+    model = EspecialidadMedico
+    form_class = EspecialidadMedicoForm
+    template_name = "medico/especialidadMedico_editar.html"
+    success_url = reverse_lazy('especialidadMedico_listar')
+    success_message = 'Registro Editado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Especialidades de los Médicos"
+        return context
+
+class EspecialidadMedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = 'covid.delete_especialidadmedico'
+    model = EspecialidadMedico
+    form_class = EspecialidadMedicoForm
+    template_name = "medico/especialidadMedico_eliminar.html"
+    success_url = reverse_lazy('especialidadMedico_listar')
+    success_message = 'Registro Eliminado Exitosamente'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(EspecialidadMedicoDeleteView, self).delete(request, *args, **kwargs)
+
+class EspecialidadMedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = 'covid.view_especialidadmedico'
+    model = EspecialidadMedico
+    template_name = "medico/EspecialidadMedico_detalle.html"
+
+#MEDICO
+
+
+#PACIENTE

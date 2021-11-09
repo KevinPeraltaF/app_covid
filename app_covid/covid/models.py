@@ -32,15 +32,25 @@ class ModeloBase(models.Model):
         super(ModeloBase, self).save(*args, **kwargs)
 
 
-
-
-
 class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula')
     tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
 
-   
+#Especialidad
+class EspecialidadMedico(ModeloBase):
+     descripcion = models.CharField("Especialidad", max_length=200 , unique=True)
+
+#MEDICO
+class Medico(ModeloBase):
+     usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
+     especialidad = models.ForeignKey(EspecialidadMedico, verbose_name="Especialidad", on_delete=models.PROTECT)
+
+# PACIENTE
+class Paciente(ModeloBase):
+     usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
+     direccion = models.TextField("Dirección", max_length=200 )
+
 #MODELO MENU 
 class Menu(ModeloBase):
     """Model definition for Menu."""
@@ -67,7 +77,6 @@ class Menu(ModeloBase):
         self.titulo = self.titulo.lower().strip()
         self.descripcion = self.descripcion.lower().strip()
         return super(Menu, self).save(*args, **kwargs)
-
 
 class Menu_Groups(models.Model):
     group = models.ForeignKey(Group,on_delete=models.CASCADE)
