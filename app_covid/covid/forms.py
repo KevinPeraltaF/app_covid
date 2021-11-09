@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms.forms import Form
+from django.forms.models import inlineformset_factory
 #MODELS
 from .models import Menu,Group,Permission,User,Menu_Groups, EspecialidadMedico,Medico,Paciente
 
@@ -103,6 +104,7 @@ class MedicoForm(forms.ModelForm):
     class Meta:
         model = Medico
         fields = '__all__'
+        exclude= ('usuario',)
         
 
 class PacienteForm(forms.ModelForm):
@@ -116,9 +118,8 @@ class PacienteForm(forms.ModelForm):
         fields = '__all__'
       
       
-    
 
-        
+
 
    
     

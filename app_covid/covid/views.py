@@ -1,5 +1,6 @@
 #DJANGO
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView,FormView)
 from django.views.generic.detail import DetailView
@@ -13,7 +14,7 @@ from django.contrib.auth.views import PasswordChangeView
 #MODELS
 from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente
 #FORMS
-from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm
+from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm,MedicoForm,PacienteForm
 #auditoria - crum django
 from crum import get_current_user
 #MY VIEWS
@@ -261,13 +262,6 @@ class UsuarioCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
         context['titulo'] = "Registro de usuarios"
         return context
 
-    def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-        #estableciendo password y usuario por defecto cedula
-        form.instance.username = form.cleaned_data['cedula']
-        form.instance.password = make_password(form.cleaned_data['cedula'])
-        self.object = form.save()
-        return super().form_valid(form)
 
  
 
@@ -378,8 +372,6 @@ class EspecialidadMedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,Su
         context['titulo'] = "Registro de Especialidades de los Médicos"
         return context
 
-  
-
 class EspecialidadMedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_especialidadmedico'
     model = EspecialidadMedico
@@ -413,6 +405,91 @@ class EspecialidadMedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,De
     template_name = "medico/EspecialidadMedico_detalle.html"
 
 #MEDICO
+class MedicoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_medico'
+    model = Medico
+    template_name = "medico/medico_listar.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Médicos"
+        return context
+
+class MedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = 'covid.add_medico'
+    model = Medico
+    form_class = MedicoForm
+    second_form_class = UserForm
+    template_name = "medico/medico_crear.html"
+    success_url = reverse_lazy('medico_listar')
+    success_message = 'Registro Guardado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Médicos"
+        
+        if 'form' not in context:
+            context['form'] = self.form_class(self.request.GET)
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(self.request.GET)
+            
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        form = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST)
+    
+        
+        if  form.is_valid() and form2.is_valid():
+            Medico = form.save(commit = False)
+            grupo = Group.objects.get(name="Medico")
+            
+            Medico.usuario = form2.save()
+            Medico.usuario.groups.add(grupo) 
+            Medico.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else :
+            return self.render_to_response(self.get_context_data(form=form,form2=form2))
+    
+ 
+
+class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_medico'
+    model = Medico
+    form_class = MedicoForm
+    template_name = "medico/medico_editar.html"
+    success_url = reverse_lazy('medico_listar')
+    success_message = 'Registro Editado Exitosamente'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Médicos"
+    
+        return context
+
+class MedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = 'covid.delete_medico'
+    model = Medico
+    form_class = MedicoForm
+    template_name = "medico/medico_eliminar.html"
+    success_url = reverse_lazy('medico_listar')
+    success_message = 'Registro Eliminado Exitosamente'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(MedicoDeleteView, self).delete(request, *args, **kwargs)
+
+class MedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = 'covid.view_medico'
+    model = Medico
+    template_name = "medico/medico_detalle.html"
 
 
 #PACIENTE

@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import Group, AbstractUser, Permission
 from django.conf import settings
-
+from django.contrib.auth.hashers import make_password
 #auditoria - crum django
 from crum import get_current_user
 
@@ -36,10 +36,20 @@ class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula')
     tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
+    
+    def save(self):
+        self.username = self.cedula
+        self.password = make_password(self.cedula)
+        super (User, self).save()
+        
 
 #Especialidad
 class EspecialidadMedico(ModeloBase):
-     descripcion = models.CharField("Especialidad", max_length=200 , unique=True)
+    descripcion = models.CharField("Especialidad", max_length=200 , unique=True)
+     
+    def __str__(self):
+        """Unicode representation of EspecialidadMedico."""
+        return '{}'.format(self.descripcion)
 
 #MEDICO
 class Medico(ModeloBase):
