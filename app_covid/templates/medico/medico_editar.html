@@ -22,10 +22,39 @@
     </div>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <form method="post" class="card-box" action="{% url 'medico_editar' object.id %}" enctype="multipart/form-data">
+            <form method="post" class="card-box" enctype="multipart/form-data">
                 <div class="row">
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.last_name.label}} {{form2.last_name}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.first_name.label}} {{form2.first_name}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset class="form-group">
+                            {{form2.cedula.label}} {{form2.cedula}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+
+                        <fieldset class="form-group">
+                            {{form2.email.label}} {{form2.email}}
+                        </fieldset>
+                    </div>
+
+                    <div class="col">
+                        <fieldset class="form-group">
+                            {{form2.genero.label}} {{form2.genero}}
+                        </fieldset>
+                    </div>
 
                     {% include "form_snippet.html" %}
+
+
 
                 </div>
                 <div class="m-t-20 text-center">

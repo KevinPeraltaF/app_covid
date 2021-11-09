@@ -461,7 +461,9 @@ class MedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
 class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_medico'
     model = Medico
+    second_model = User
     form_class = MedicoForm
+    second_form_class = UserForm
     template_name = "medico/medico_editar.html"
     success_url = reverse_lazy('medico_listar')
     success_message = 'Registro Editado Exitosamente'
@@ -471,7 +473,15 @@ class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de Médicos"
-    
+        pk = self.kwargs.get('pk',0)
+        Medico = self.model.objects.get(id=pk)
+        User = self.second_model.objects.get(id=Medico.usuario_id)
+        
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(instance=User)
+        context['id'] = pk 
         return context
 
 class MedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
