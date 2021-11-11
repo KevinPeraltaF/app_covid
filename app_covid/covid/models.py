@@ -86,8 +86,6 @@ class Menu(ModeloBase):
         self.descripcion = self.descripcion.lower().strip()
         return super(Menu, self).save(*args, **kwargs)
     
-    
-    
 @receiver(post_delete, sender=Menu)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """Deletes file from filesystem when corresponding `MediaFile` object
