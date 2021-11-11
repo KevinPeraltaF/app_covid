@@ -49,4 +49,12 @@ urlpatterns = [
     path('paciente/editar/<int:pk>', key.PacienteUpdateView.as_view(), name="paciente_editar") ,
     path('paciente/Eliminar/<int:pk>', key.PacienteDeleteView.as_view(), name="paciente_eliminar") ,
     path('paciente/Detalle/<int:pk>', key.PacienteDetailView.as_view(), name="paciente_detalle") ,
+    
+    
+    path('report/', key.ReportView.as_view(),name='reporte'),
+    path('rayx/',key.RayxListView.as_view(),name="rayx_listar"),
+    path('rayx/crear/',key.RayxCreateView.as_view(),name="rayx_crear"),
+    #path('rayx/editar/<int:pk>',key.RayxUpdateView.as_view(),name="rayx_editar"),
+    #path('rayx/Eliminar/<int:pk>',key.RayxDeleteView.as_view(),name="rayx_eliminar"),
+    #path('rayx/Detalle/<int:pk>',key.RayxetailView.as_view(),name="rayx_detalle"),
 ]

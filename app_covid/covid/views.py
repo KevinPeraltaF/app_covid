@@ -13,9 +13,9 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordChangeView
 from django.core.exceptions import ValidationError
 #MODELS
-from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente
+from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
 #FORMS
-from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm,MedicoForm,PacienteForm
+from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm,MedicoForm,PacienteForm,RayxForm
 #auditoria - crum django
 from crum import get_current_user
 #MY VIEWS
@@ -670,3 +670,55 @@ class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_paciente'
     model = Paciente
     template_name = "paciente/paciente_detalle.html"
+
+
+class ReportView(LoginRequiredMixin,TemplateView):
+    template_name = "reporte/reportes.html"
+    def get_context_data(self, **kwargs):
+        permisos = Group.objects.filter(user=self.request.user)
+        context = super().get_context_data(**kwargs)
+        context['titulo'] ="Reportes"
+        if self.request.user.is_superuser:
+            context['MenuSuperUser'] = Menu.objects.all()
+        else:
+            context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
+        return context
+
+#ANALISIS RADIOGRAFICO
+class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_user'
+    model = Analisis_Radiografico
+    template_name = "analisis/analisis_listar.html"
+
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        queryset = Analisis_Radiografico.objects.all()
+        if busqueda:
+            queryset = Analisis_Radiografico.objects.filter(
+                Q(paciente__icontains= busqueda)|
+                Q(doctor__icontains= busqueda)
+                ).distinct()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Analisis rádiograficos"
+        return context
+
+
+class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
+    permission_required = 'covid.add_user'
+    model = Analisis_Radiografico
+    form_class = RayxForm
+    template_name = "analisis/analisis_crear.html"
+    success_url = reverse_lazy('rayx_listar')
+    success_message = 'Registro Guardado Exitosamente'
+    
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Analisis rádiograficos"
+        return context

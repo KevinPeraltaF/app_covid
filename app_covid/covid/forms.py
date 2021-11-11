@@ -4,7 +4,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.forms.forms import Form
 from django.forms.models import inlineformset_factory
 #MODELS
-from .models import Menu,Group,Permission,User,Menu_Groups, EspecialidadMedico,Medico,Paciente
+from .models import Menu,Group,Permission,User,Menu_Groups, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
 
 class MenuForm(forms.ModelForm):
     
@@ -112,6 +112,15 @@ class PacienteForm(forms.ModelForm):
         exclude= ('usuario',)
       
       
+class RayxForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RayxForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+    class Meta:
+        model = Analisis_Radiografico
+        fields = '__all__'
 
 
 

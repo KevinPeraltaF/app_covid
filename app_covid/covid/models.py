@@ -121,5 +121,27 @@ class Menu_Groups(models.Model):
     activo = models.BooleanField(default=True)
 
   
+class Analisis_Radiografico(models.Model):
+    paciente = models.ForeignKey(Paciente,on_delete=models.CASCADE, related_name="paciente_user")
+    doctor = models.ForeignKey(Medico,on_delete=models.CASCADE, related_name="doctor_user")
+    imagen = models.ImageField(verbose_name="muestra", upload_to='muestra_covid/')
+    result_analisis=models.BooleanField()
+    fecha = models.DateTimeField(verbose_name='Fecha de Registro', auto_now_add=True)
+    descripcion = models.CharField(verbose_name='Descripcion', max_length=200)
+    class Meta:
+        """Meta definition for Analisis_Radiografico."""
+        verbose_name = 'Analisis'
+        verbose_name_plural = 'Analisis'
+
+    def __str__(self):
+        """Unicode representation of Analisis_Radiografico."""
+        return '{}'.format(self.result_analisis)
+    
+    def save(self, *args, **kwargs):
+        """Save method for Analisis_Radiografico."""
+        self.descripcion = self.descripcion.lower().strip()
+        return super(Analisis_Radiografico, self).save(*args, **kwargs)
+
+
 
 

@@ -1,0 +1,174 @@
+{% extends 'plantillaBase.html' %} {% load static %} {% block content_extra_js %}
+<script src="{% static 'plugins/Highcharts-9.3.0/code/highcharts.js'%}"></script>
+<script src="{% static 'plugins/Highcharts-9.3.0/code/modules/exporting.js'%}"></script>
+<script src="{% static 'plugins/Highcharts-9.3.0/code/modules/export-data.js'%}"></script>
+<script src="{% static 'plugins/Highcharts-9.3.0/code/modules/accessibility.js'%}"></script>
+<script>
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Promedio de casos de Covid por Mes'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Casos'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Positivo',
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+        }, {
+            name: 'Negativo',
+            data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+        }]
+    });
+    Highcharts.chart('pie-chart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Porcentaje de casos de Covid-19'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [{
+                name: 'Positivo',
+                y: 61.41,
+                sliced: true,
+                selected: true
+            }, {
+                name: 'Negativos',
+                y: 11.84
+            }]
+        }]
+    });
+    Highcharts.chart('casos-genero', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Promedio de casos por Genero'
+        },
+        xAxis: {
+            categories: [
+                'Femenino',
+                'Masculino'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Casos'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Positivo',
+            data: [49.9, 71.5]
+
+        }, {
+            name: 'Negativo',
+            data: [83.6, 78.8]
+
+        }]
+    });
+</script>
+{% endblock content_extra_js %} {% block content %}
+<div class="main-wrapper">
+    <div class="page-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="container">
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id="pie-chart">
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div id="casos-genero">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
