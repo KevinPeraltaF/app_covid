@@ -1,53 +1,174 @@
 {% extends 'plantillaBase.html' %} {% block content %}
-<div class="main-wrapper">
-    <div class="page-wrapper">
-        <div class="content">
-            <div class="row">
-                <div class="col-sm-4 col-3">
-                    <h4 class="page-title">Análisis Radiográfico</h4>
-                </div>
-                <div class="col-sm-8 col-9 text-right m-b-20">
-                    <a href="{% url 'rayx_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i
-                                class="fa fa-plus"></i> Nuevo Análisis</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <table class="table table-border table-striped custom-table datatable mb-0 dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-                        <thead>
-                            <tr role="row">
-                                <th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 300px;">Fecha</th>
-                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" aria-label="Age: activate to sort column ascending" style="width: 600px;">PACIENTE</th>
-                                <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" aria-label="Address: activate to sort column ascending" style="width: 327.547px;">Anàlisis</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr role="row" class="even">
-                                <td class="sorting_1"> 25 de octubre del 2021</td>
-                                <td>MARIO JOSE CALDERON ORTIZ</td>
-                                <td><span class="badge badge-danger">COVID DETECTADO</span></td>
-
-                                <td class="text-right">
-                                    <div class="dropdown dropdown-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
-                                                    class="fa fa-ellipsis-v"></i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#"><i
-                                                        class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient"><i
-                                                        class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="row">
+    <div class="col">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-
+        {% endfor %}
     </div>
 </div>
-{% endblock %}
+<div class="mt-2">
+    <form action="" method="GET">
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus focused">
+                    <input type="text" name="buscar" id="id_buscar" class="form-control float-right" placeholder="Buscar por paciente">
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3">
+                <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row ">
+
+    <div class="col-sm-12 col-12 text-right m-b-20">
+        {% if perms.covid.add_analisis_radiografico%}
+        <a href="{% url 'rayx_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i
+            class="fa fa-plus"></i> Nuevo Análisis</a>{% endif %}
+
+
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-border table-striped custom-table  mb-0  no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Doctor</th>
+                                    <th>Paciente</th>
+                                    <th>Radiografía</th>
+                                    <th>Resultado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dato in object_list %}
+                                <tr>
+                                    <td>{{ dato.fecha }}</td>
+                                    <td>{{ dato.doctor }}</td>
+                                    <td>{{ dato.paciente }}</td>
+                                    {% if dato.imagen %}
+                                    <td>
+                                        <a href="{{dato.imagen.url}}" target="_blank"><img src="{{dato.imagen.url}}" class="img-thumbnail" width="40px"></a>
+                                    </td>{% else %}
+                                    <td><a href="#">No tiene icono</a> </td> {% endif %}
+
+
+                                    <td>
+                                        {% if dato.result_analisis == True%}
+                                        <span class="badge badge-danger">COVID DETECTADO</span> {% else %}
+                                        <span class="badge badge-success">SIN COVID</span> {% endif %}
+                                    </td>
+
+
+                                    <td class="text-right">
+                                        <div class="dropdown dropdown-action">
+                                            <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                {% if perms.covid.change_analisis_radiografico %}
+                                                <a class="dropdown-item" href="{% url 'rayx_editar' dato.id%}"><i
+                                                        class="fa fa-pencil m-r-5"></i> Editar</a> {% endif %} {% if perms.covid.delete_analisis_radiografico %}
+                                                <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'rayx_eliminar' dato.id%}')"><i
+                                                        class="fa fa-trash-o  m-r-5"></i>Eliminar</a>{% endif %} {% if perms.covid.view_analisis_radiografico %}
+                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'rayx_detalle' dato.id%}')"><i
+                                                        class="fa fa-eye  m-r-5"></i>Ver</a>{% endif %}
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="container-fluid">
+            <!-- /paginador -->
+            <ul class="pagination pagination-sm m-0 float-right">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center mt-2">
+
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                        {% endif %} {% for i in page_obj.paginator.page_range %} {% if i == page_obj.number %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endif %} {% endfor %} {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="eliminar" role="dialog">
+
+</div>
+
+<!-- Large modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="detalle" aria-hidden="true">
+
+</div>
+
+
+{% endblock %} {% block content_extra_js %}
+<script>
+    /** funcion para abrir el modal de eliminar */
+    function abrirModalEliminar(url) {
+
+        $('#eliminar').load(url, function() {
+            $('#eliminar').modal('show');
+        })
+    }
+
+    /** funcion para abrir el modal de eliminar */
+    function abrirModalDetalle(url) {
+
+        $('#detalle').load(url, function() {
+            $('#detalle').modal('show');
+        })
+    }
+</script>
+
+
+{% endblock content_extra_js %}

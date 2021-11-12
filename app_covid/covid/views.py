@@ -49,7 +49,7 @@ class Error500View(TemplateView):
 #MENU
 class MenuListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_menu'
-    ordering = ['id']
+    paginate_by = 7
     model = Menu
     template_name = "menu/menu_listar.html"
 
@@ -158,6 +158,7 @@ class Menu_AccesoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMe
 class GrupoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'auth.view_group'
     model = Group
+    paginate_by = 7
     template_name = "grupo/grupo_listar.html"
 
     def get_queryset(self):
@@ -225,6 +226,7 @@ class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
 class UsuarioListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_user'
     model = User
+    paginate_by = 7
     template_name = "usuario/usuario_listar.html"
 
     def get_queryset(self):
@@ -289,7 +291,6 @@ class UsuarioUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
 class UsuarioDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_user'
     model = User
-    form_class = UserForm
     template_name = "usuario/usuario_eliminar.html"
     success_url = reverse_lazy('usuario_listar')
     success_message = 'Registro Eliminado Exitosamente'
@@ -344,6 +345,7 @@ class PasswordChangeView(PasswordChangeView):
 class EspecialidadMedicoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_especialidadmedico'
     model = EspecialidadMedico
+    paginate_by = 7
     template_name = "medico/especialidadMedico_listar.html"
 
     def get_queryset(self):
@@ -396,7 +398,6 @@ class EspecialidadMedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,Su
 class EspecialidadMedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_especialidadmedico'
     model = EspecialidadMedico
-    form_class = EspecialidadMedicoForm
     template_name = "medico/especialidadMedico_eliminar.html"
     success_url = reverse_lazy('especialidadMedico_listar')
     success_message = 'Registro Eliminado Exitosamente'
@@ -414,6 +415,7 @@ class EspecialidadMedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,De
 class MedicoListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_medico'
     model = Medico
+    paginate_by = 7
     template_name = "medico/medico_listar.html"
     
     def get_queryset(self):
@@ -525,7 +527,6 @@ class MedicoUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
 class MedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_medico'
     model = Medico
-    form_class = MedicoForm
     template_name = "medico/medico_eliminar.html"
     success_url = reverse_lazy('medico_listar')
     success_message = 'Registro Eliminado Exitosamente'
@@ -539,11 +540,11 @@ class MedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = Medico
     template_name = "medico/medico_detalle.html"
 
-
 #PACIENTE
 class PacienteListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_paciente'
     model = Paciente
+    paginate_by = 7
     template_name = "paciente/paciente_listar.html"
     
     def get_queryset(self):
@@ -605,6 +606,7 @@ class PacienteCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessa
             Paciente.save()
             return HttpResponseRedirect(self.get_success_url())
         else :
+            
             return self.render_to_response(self.get_context_data(form=form,form2=form2))
     
 class PacienteUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
@@ -657,7 +659,6 @@ class PacienteUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessa
 class PacienteDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_paciente'
     model = Paciente
-    form_class = PacienteForm
     template_name = "paciente/paciente_eliminar.html"
     success_url = reverse_lazy('paciente_listar')
     success_message = 'Registro Eliminado Exitosamente'
@@ -670,7 +671,6 @@ class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_paciente'
     model = Paciente
     template_name = "paciente/paciente_detalle.html"
-
 
 class ReportView(LoginRequiredMixin,TemplateView):
     template_name = "reporte/reportes.html"
@@ -686,18 +686,21 @@ class ReportView(LoginRequiredMixin,TemplateView):
 
 #ANALISIS RADIOGRAFICO
 class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required = 'covid.view_user'
+    permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico
+    paginate_by = 7
     template_name = "analisis/analisis_listar.html"
 
     def get_queryset(self):
         busqueda = self.request.GET.get("buscar")
-        queryset = Analisis_Radiografico.objects.all()
+        queryset = Analisis_Radiografico.objects.all().order_by("pk")
         if busqueda:
             queryset = Analisis_Radiografico.objects.filter(
-                Q(paciente__icontains= busqueda)|
-                Q(doctor__icontains= busqueda)
-                ).distinct()
+                Q(paciente__usuario__last_name__icontains= busqueda)|
+                Q(paciente__usuario__first_name__icontains= busqueda)
+                
+                
+                ).distinct().order_by("pk")
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -707,15 +710,47 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         context['titulo'] = "Registro de Analisis rádiograficos"
         return context
 
-
 class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
-    permission_required = 'covid.add_user'
+    permission_required = 'covid.add_analisis_radiografico'
     model = Analisis_Radiografico
     form_class = RayxForm
     template_name = "analisis/analisis_crear.html"
     success_url = reverse_lazy('rayx_listar')
     success_message = 'Registro Guardado Exitosamente'
     
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Registro de Analisis rádiograficos"
+        return context
+      
+class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = 'covid.view_analisis_radiografico'
+    model = Analisis_Radiografico
+    template_name = "analisis/analisis_detalle.html"
+
+
+class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
+    permission_required = 'covid.delete_analisis_radiografico'
+    model = Analisis_Radiografico
+    template_name = "analisis/analisis_eliminar.html"
+    success_url = reverse_lazy('rayx_listar')
+    success_message = 'Registro Eliminado Exitosamente'
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(RayxDeleteView, self).delete(request, *args, **kwargs)
+    
+    
+class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
+    permission_required = 'covid.change_especialidadmedico'
+    model = Analisis_Radiografico
+    form_class = RayxForm
+    template_name = "analisis/analisis_editar.html"
+    success_url = reverse_lazy('rayx_listar')
+    success_message = 'Registro Editado Exitosamente'
+
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)

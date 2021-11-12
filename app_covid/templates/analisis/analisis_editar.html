@@ -22,13 +22,10 @@
     </div>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <form method="post" class="card-box" enctype="multipart/form-data">
+            <form method="post" class="card-box" action="{% url 'rayx_editar' object.id %}" enctype="multipart/form-data">
                 <div class="row">
 
-
                     {% include "form_snippet.html" %}
-
-
 
                 </div>
                 <div class="m-t-20 text-center">
@@ -40,5 +37,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

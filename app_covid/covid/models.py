@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import Group, AbstractUser, Permission
 from django.conf import settings
-from django.contrib.auth.hashers import make_password
+
 
 import os
 from django.db.models.signals import pre_delete, post_delete, pre_save
@@ -42,6 +42,9 @@ class User(AbstractUser,ModeloBase):
     tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
     genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
     
+    def get_full_name(self):
+        """Unicode representation of Analisis_Radiografico."""
+        return '{} {}'.format(self.last_name,self.first_name)
 
 #Especialidad
 class EspecialidadMedico(ModeloBase):
@@ -50,16 +53,35 @@ class EspecialidadMedico(ModeloBase):
     def __str__(self):
         """Unicode representation of EspecialidadMedico."""
         return '{}'.format(self.descripcion)
+    
+    def save(self, *args, **kwargs):
+        """Save method for Analisis_Radiografico."""
+        self.direccion = self.direccion.lower().strip()
+        return super(EspecialidadMedico, self).save(*args, **kwargs)
+    
+    
 
 #MEDICO
 class Medico(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
      especialidad = models.ForeignKey(EspecialidadMedico, verbose_name="Especialidad", on_delete=models.PROTECT)
-
+     def __str__(self):
+        """Unicode representation of Analisis_Radiografico."""
+        return '{}'.format(self.usuario.get_full_name())
+    
 # PACIENTE
 class Paciente(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
-     direccion = models.TextField("Dirección", max_length=200 )
+     direccion = models.CharField("Dirección", max_length=200 )
+     
+     def __str__(self):
+        """Unicode representation of Analisis_Radiografico."""
+        return '{}'.format(self.usuario.get_full_name())
+    
+     def save(self, *args, **kwargs):
+        """Save method for Analisis_Radiografico."""
+        self.direccion = self.direccion.lower().strip()
+        return super(Paciente, self).save(*args, **kwargs)
 
 #MODELO MENU 
 class Menu(ModeloBase):
@@ -142,6 +164,34 @@ class Analisis_Radiografico(models.Model):
         self.descripcion = self.descripcion.lower().strip()
         return super(Analisis_Radiografico, self).save(*args, **kwargs)
 
+@receiver(post_delete, sender=Analisis_Radiografico)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """Deletes file from filesystem when corresponding `MediaFile` object
+        is deleted."""
+    ruta = settings.MEDIA_ROOT +"\\"+ str(instance.imagen)
+    if ruta:
+        if os.path.isfile(ruta):
+            os.remove(ruta)
+                           
+@receiver(pre_save, sender=Analisis_Radiografico)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """Deletes old file from filesystem when corresponding `MediaFile`
+        object is updated with new file."""
+    if not instance.pk:
+         return False
+    if not instance.pk:
+        return False
 
+    try:
+        old_file = Analisis_Radiografico.objects.get(pk=instance.pk).imagen
+    except Menu.DoesNotExist:
+        return False
+
+    new_file = instance.imagen
+    if not old_file == new_file:
+        ruta = settings.MEDIA_ROOT +"\\"+ str(old_file)
+        if os.path.isfile(ruta):
+            os.remove(ruta)
+  
 
 

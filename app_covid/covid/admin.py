@@ -1,16 +1,10 @@
 from django.contrib import admin
-
-from .models import ModeloBase,Menu,Permission, User, EspecialidadMedico,Medico,Paciente
+from django.contrib.auth.admin import UserAdmin
+from .models import ModeloBase,Menu,Permission, User, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
 # Register your models here.
+admin.site.register(User, UserAdmin)
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    '''Admin View for Menu'''
-
-    list_display = ('username','first_name','last_name','email','is_active','is_staff','is_superuser',)
-    list_filter = ('username','first_name','last_name','email','is_staff','is_active',)
-    search_fields = ('username','first_name','last_name','email',)
-
+admin.site.register(Analisis_Radiografico)
 
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
@@ -45,3 +39,6 @@ class PacienteAdmin(admin.ModelAdmin):
     list_display = ('usuario','direccion','usuario_creacion','fecha_creacion','usuario_modificacion','fecha_modificacion',)
     list_filter = ('usuario','direccion',)
     search_fields = ('usuario',)
+    
+
+   
