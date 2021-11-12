@@ -1,5 +1,6 @@
 #DJANGO
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.db.models.fields import DateField
 from django.http.response import  HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
@@ -694,7 +695,6 @@ class ReportView(LoginRequiredMixin,TemplateView):
 
 #ANALISIS RADIOGRAFICO
 def predict(file):
-    
     modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
     pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
     #print(modelo)
@@ -723,18 +723,29 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = "analisis/analisis_listar.html"
 
     def get_queryset(self):
-        user = get_current_user()
+        id_usuario = self.request.user.id
         busqueda = self.request.GET.get("buscar")
-        queryset = Analisis_Radiografico.objects.all().order_by("pk")
-        if busqueda:
-            queryset = Analisis_Radiografico.objects.filter(
-                Q(paciente__usuario__last_name__icontains= busqueda)|
-                Q(paciente__usuario__first_name__icontains= busqueda)
-                
-                
-                ).distinct().order_by("pk")
-            
-
+        usuario  = User.objects.get(pk=id_usuario)
+        grupos = usuario.groups.all()
+        for dato in grupos:
+            if str(dato) == 'Médico':
+                if busqueda:
+                    queryset = Analisis_Radiografico.objects.filter( 
+                                                                    Q(paciente__usuario__first_name__icontains= busqueda) |
+                                                                    Q(paciente__usuario__last_name__icontains= busqueda)
+                                                                    ).filter(doctor__usuario__id= id_usuario).distinct().order_by("pk")
+                else:
+                    queryset = Analisis_Radiografico.objects.filter(doctor__usuario =usuario.pk ).order_by("pk")
+        if usuario.is_superuser:
+            if busqueda:
+                    queryset = Analisis_Radiografico.objects.filter( 
+                                                                    Q(paciente__usuario__first_name__icontains= busqueda) |
+                                                                    Q(paciente__usuario__last_name__icontains= busqueda)
+                                                                    ).distinct().order_by("pk")
+            else:
+                queryset = Analisis_Radiografico.objects.all().order_by("pk") 
+           
+              
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -768,8 +779,7 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         form.instance.result_analisis = predict(file)
        
         return super().form_valid(form)
- 
-      
+       
 class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico
@@ -803,7 +813,6 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         return context
 
 
-
 class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico
@@ -811,13 +820,15 @@ class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = "analisis/analisisPorPaciente_listar.html"
 
     def get_queryset(self):
-        busqueda = self.request.GET.get("buscar")
-        user = get_current_user()
-        
-        queryset = Analisis_Radiografico.objects.filter(paciente__usuario =user.pk ).order_by("pk")
-        
-        if not queryset:
-            queryset = Analisis_Radiografico.objects.all().order_by("pk")
+        id_usuario = self.request.user.id
+        usuario  = User.objects.get(pk=id_usuario)
+        grupos = usuario.groups.all()
+        for dato in grupos:
+            if str(dato) == 'Paciente':
+                queryset = Analisis_Radiografico.objects.filter(paciente__usuario =usuario.pk ).order_by("pk")
+            
+        if usuario.is_superuser:
+            queryset = Analisis_Radiografico.objects.all().order_by("pk")   
         return queryset
 
     def get_context_data(self, **kwargs):
