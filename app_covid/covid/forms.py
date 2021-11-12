@@ -110,13 +110,17 @@ class PacienteForm(forms.ModelForm):
         fields = '__all__'
         exclude= ('usuario',)
       
-      
+
+from crum import get_current_user
 class RayxForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RayxForm, self).__init__(*args, **kwargs)
-    
+
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+        user = get_current_user()
+        self.fields['doctor'].queryset =  Medico.objects.filter(usuario=user.pk)
+  
     class Meta:
         model = Analisis_Radiografico
         fields = '__all__'

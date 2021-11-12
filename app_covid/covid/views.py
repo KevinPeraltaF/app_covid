@@ -776,7 +776,10 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         imagen = form.cleaned_data['imagen']
         ruta = os.path.join(settings.MEDIA_ROOT,'muestra_covid')
         file = os.path.join(ruta,str(imagen))
+       
+        
         form.instance.result_analisis = predict(file)
+        
        
         return super().form_valid(form)
        
@@ -796,7 +799,6 @@ class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         messages.success(self.request, self.success_message)
         return super(RayxDeleteView, self).delete(request, *args, **kwargs)
     
-    
 class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_especialidadmedico'
     model = Analisis_Radiografico
@@ -811,7 +813,6 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de Analisis rádiograficos"
         return context
-
 
 class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
@@ -838,10 +839,7 @@ class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         context['titulo'] = "Resultado de Mis Radiografias"
         return context
 
-
-
-#VACUNA
-    
+#VACUNA  
 class VacunaListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_vacuna'
     model = Vacuna
