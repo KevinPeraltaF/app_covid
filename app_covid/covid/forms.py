@@ -118,8 +118,13 @@ class RayxForm(forms.ModelForm):
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
-        user = get_current_user()
-        self.fields['doctor'].queryset =  Medico.objects.filter(usuario=user.pk)
+        user = get_current_user()  
+        id_usuario = user.pk
+        usuario  = User.objects.get(pk=id_usuario)
+        grupos = usuario.groups.all()
+        for dato in grupos:
+            if str(dato) == 'Médico':      
+                self.fields['doctor'].queryset =  Medico.objects.filter(usuario=user.pk)
   
     class Meta:
         model = Analisis_Radiografico
