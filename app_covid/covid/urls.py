@@ -59,4 +59,6 @@ urlpatterns = [
     path('rayx/editar/<int:pk>',key.RayxUpdateView.as_view(),name="rayx_editar"),
     path('rayx/Eliminar/<int:pk>',key.RayxDeleteView.as_view(),name="rayx_eliminar"),
     path('rayx/Detalle/<int:pk>',key.RayxDetailView.as_view(),name="rayx_detalle"),
+    
+     path('myresultado/',key.MyresultListView.as_view(),name="myresultado_listar"),
 ]

@@ -1,8 +1,8 @@
 #DJANGO
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import  HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic.edit import (CreateView, UpdateView, DeleteView,FormView)
+from django.views.generic.edit import (CreateView, UpdateView, DeleteView)
 from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
@@ -11,13 +11,21 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordChangeView
-from django.core.exceptions import ValidationError
+
 #MODELS
+from crum import get_current_user
 from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
 #FORMS
 from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm,MedicoForm,PacienteForm,RayxForm
-#auditoria - crum django
-from crum import get_current_user
+
+#IA
+from django.conf import settings
+import os
+import numpy as np
+from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.python.keras.models import load_model
+
+
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
     template_name = "registration/dashboard.html"
@@ -470,7 +478,7 @@ class MedicoCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
             form2.instance.username = form2.cleaned_data['cedula']
             form2.instance.password = make_password(form2.cleaned_data['cedula'])
             Medico = form.save(commit = False)
-            grupo = Group.objects.get(name="Medico")
+            grupo = Group.objects.get(name="Médico")
            
             Medico.usuario = form2.save()
             Medico.usuario.groups.add(grupo) 
@@ -685,6 +693,26 @@ class ReportView(LoginRequiredMixin,TemplateView):
         return context
 
 #ANALISIS RADIOGRAFICO
+def predict(file):
+    rutaModelo = os.path.join(settings.BASE_DIR,'plugins\cnnModelo')
+    cnn = load_model(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\modelo8.h5")
+    cnn.load_weights(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\pesos8.h5")
+    
+    longitud, altura = 200,200 
+    x = load_img(file, target_size=(longitud, altura))
+    x = img_to_array(x)
+    x = np.expand_dims(x, axis=0)
+    arreglo = cnn.predict(x) ##arreglo de 2 dimensiones [[1,0,0]]
+    resultado = arreglo[0]
+    respuesta = np.argmax(resultado)
+    if respuesta==1:
+        print('Sin covid')
+    elif respuesta ==0:
+        print('covid detectado')
+    return respuesta
+
+
+
 class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico
@@ -692,6 +720,7 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     template_name = "analisis/analisis_listar.html"
 
     def get_queryset(self):
+        user = get_current_user()
         busqueda = self.request.GET.get("buscar")
         queryset = Analisis_Radiografico.objects.all().order_by("pk")
         if busqueda:
@@ -701,6 +730,8 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
                 
                 
                 ).distinct().order_by("pk")
+            
+
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -724,12 +755,22 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de Analisis rádiograficos"
         return context
+    
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        imagen = form.cleaned_data['imagen']
+        ruta = os.path.join(settings.MEDIA_ROOT,'muestra_covid')
+        file = os.path.join(ruta,str(imagen))
+        form.instance.result_analisis = predict(file)
+       
+        return super().form_valid(form)
+ 
       
 class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico
     template_name = "analisis/analisis_detalle.html"
-
 
 class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_analisis_radiografico'
@@ -756,4 +797,29 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de Analisis rádiograficos"
+        return context
+
+
+
+class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
+    permission_required = 'covid.view_analisis_radiografico'
+    model = Analisis_Radiografico
+    paginate_by = 7
+    template_name = "analisis/analisisPorPaciente_listar.html"
+
+    def get_queryset(self):
+        busqueda = self.request.GET.get("buscar")
+        user = get_current_user()
+        
+        queryset = Analisis_Radiografico.objects.filter(paciente__usuario =user.pk ).order_by("pk")
+        
+        if not queryset:
+            queryset = Analisis_Radiografico.objects.all().order_by("pk")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['titulo'] = "Resultado de Mis Radiografias"
         return context

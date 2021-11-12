@@ -16,8 +16,8 @@
                         <td>{{object.fecha}}</td>
                         <th>Resultado de Análisis:</th>
                         <td> {% if object.result_analisis == True%}
-                            <span class="badge badge-danger">COVID DETECTADO</span> {% else %}
-                            <span class="badge badge-success">SIN COVID</span> {% endif %}
+                            <span class="badge badge-success">SIN COVID</span> {% else %}
+                            <span class="badge badge-danger">COVID DETECTADO</span>{% endif %}
                         </td>
 
                     </tr>
@@ -28,6 +28,13 @@
 
                         <th>Paciente:</th>
                         <td>{{object.paciente}}</td>
+
+                    </tr>
+                    <tr>
+                        <th>Comentario:</th>
+                        <td colspan="5">{{object.descripcion}}</td>
+
+
 
                     </tr>
 

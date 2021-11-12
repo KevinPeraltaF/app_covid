@@ -23,10 +23,31 @@
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <form method="post" class="card-box" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row">
 
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            {{form.paciente.label}} {{form.paciente}} {{ form.paciente.errors }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            {{form.doctor.label}} {{form.doctor}} {{ form.doctor.errors }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            {{form.imagen.label}} {{form.imagen}} {{ form.imagen.errors }}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
 
-                    {% include "form_snippet.html" %}
+                        <fieldset class="form-group">
+                            {{form.descripcion.label}} {{form.descripcion}}{{ form.descripcion.errors }}
+                        </fieldset>
+                    </div>
+
 
 
 
@@ -40,5 +61,6 @@
         </div>
     </div>
 </div>
+
 
 {% endblock %}

@@ -121,7 +121,7 @@ class RayxForm(forms.ModelForm):
     class Meta:
         model = Analisis_Radiografico
         fields = '__all__'
-
+     
 
 
    

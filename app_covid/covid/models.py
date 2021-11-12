@@ -6,7 +6,6 @@ from django.conf import settings
 
 import os
 from django.db.models.signals import pre_delete, post_delete, pre_save
-from django.conf import settings
 from django.dispatch import receiver
 
 
@@ -146,8 +145,8 @@ class Menu_Groups(models.Model):
 class Analisis_Radiografico(models.Model):
     paciente = models.ForeignKey(Paciente,on_delete=models.CASCADE, related_name="paciente_user")
     doctor = models.ForeignKey(Medico,on_delete=models.CASCADE, related_name="doctor_user")
-    imagen = models.ImageField(verbose_name="muestra", upload_to='muestra_covid/')
-    result_analisis=models.BooleanField()
+    imagen = models.ImageField(verbose_name="Imagen de Rayos X", upload_to='muestra_covid/')
+    result_analisis=models.BooleanField(verbose_name="Libre de Covid" )
     fecha = models.DateTimeField(verbose_name='Fecha de Registro', auto_now_add=True)
     descripcion = models.CharField(verbose_name='Descripcion', max_length=200)
     class Meta:
@@ -157,7 +156,7 @@ class Analisis_Radiografico(models.Model):
 
     def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
-        return '{}'.format(self.result_analisis)
+        return '{}'.format(self.paciente)
     
     def save(self, *args, **kwargs):
         """Save method for Analisis_Radiografico."""
