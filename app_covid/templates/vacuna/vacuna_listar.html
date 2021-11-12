@@ -11,30 +11,29 @@
         {% endfor %}
     </div>
 </div>
-
 <div class="mt-2">
     <form action="" method="GET">
         <div class="row filter-row">
             <div class="col-sm-6 col-md-3">
                 <div class="form-group form-focus select-focus focused">
                     <input type="text" name="buscar" id="id_buscar" class="form-control float-right" placeholder="Buscar">
+
                 </div>
             </div>
 
 
             <div class="col-sm-6 col-md-3">
-                <button type="submit" class="btn btn-primary btn-block"> Filtrar </button>
+                <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
             </div>
         </div>
-
     </form>
 </div>
 
 <div class="row ">
 
     <div class="col-sm-12 col-12 text-right m-b-20">
-        {% if perms.covid.add_menu %}
-        <a href="{% url 'menu_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i>
+        {% if perms.covid.add_vacuna%}
+        <a href="{% url 'vacuna_crear'%}" class="btn btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i>
             Añadir</a> {% endif %}
 
     </div>
@@ -44,62 +43,31 @@
     <div class="col-md-12">
         <div class="table-responsive">
             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-
                 <div class="row">
                     <div class="col-sm-12">
                         <table class="table table-border table-striped custom-table  mb-0  no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Icono</th>
-                                    <th>Url</th>
-                                    <th>Grupos</th>
-                                    <th>Activo</th>
-
-
+                                    <th>vacuna</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for dato in object_list %}
                                 <tr>
-                                    <td>{{ dato.titulo }}</td>
-
                                     <td>{{ dato.descripcion }}</td>
-
-                                    {% if dato.icono %}
-                                    <td><img src="{{dato.icono.url}}" class="img-thumbnail" width="40px"></td>{% else %}
-                                    <td><a href="#">No tiene icono</a> </td> {% endif %}
-
-                                    <td>{{ dato.url }}</td>
-                                    <td>
-                                        <ul>
-                                            {% for dato in dato.grupo.all %}
-                                            <li class="badge badge-pill badge-info">{{ dato }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    </td>
-
-                                    <td>
-                                        {% if dato.activo == True%}
-                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="Activo"><span class="fa fa-check "></span></a> {% else %}
-                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="Activo"><span class="fa fa-times "></span></a> {% endif %}
-                                    </td>
-
-
 
 
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">
                                             <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                {% if perms.covid.change_menu %}
-                                                <a class="dropdown-item" href="{% url 'menu_editar' dato.id%}"><i
-                                                        class="fa fa-pencil m-r-5"></i> Editar</a> {% endif %} {% if perms.covid.delete_menu %}
-                                                <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'menu_eliminar' dato.id%}')"><i
-                                                        class="fa fa-trash-o  m-r-5"></i>Eliminar</a>{% endif %} {% if perms.covid.view_menu %}
-                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'menu_detalle' dato.id%}')"><i
+                                                {% if perms.covid.change_vacuna %}
+                                                <a class="dropdown-item" href="{% url 'vacuna_editar' dato.id%}"><i
+                                                        class="fa fa-pencil m-r-5"></i> Editar</a> {% endif %} {% if perms.covid.delete_vacuna %}
+                                                <a class="dropdown-item" onclick="abrirModalEliminar('{% url 'vacuna_eliminar' dato.id%}')"><i
+                                                        class="fa fa-trash-o  m-r-5"></i>Eliminar</a>{% endif %} {% if perms.covid.view_vacuna %}
+                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'vacuna_detalle' dato.id%}')"><i
                                                         class="fa fa-eye  m-r-5"></i>Ver</a>{% endif %}
 
                                             </div>
@@ -111,11 +79,10 @@
                             </tbody>
                         </table>
                     </div>
-
-
                 </div>
 
             </div>
+
         </div>
 
         <div class="container-fluid">
@@ -147,6 +114,8 @@
             </ul>
         </div>
     </div>
+
+
 </div>
 
 

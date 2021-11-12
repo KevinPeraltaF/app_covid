@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import ModeloBase,Menu,Permission, User, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
+from .models import ModeloBase,Menu,Permission, User, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico,Vacuna
 # Register your models here.
 admin.site.register(User, UserAdmin)
 
@@ -41,4 +41,11 @@ class PacienteAdmin(admin.ModelAdmin):
     search_fields = ('usuario',)
     
 
-   
+
+@admin.register(Vacuna)
+class VacunaAdmin(admin.ModelAdmin):
+    '''Admin View for Vacuna'''
+
+    list_display = ('descripcion','usuario_creacion','fecha_creacion','usuario_modificacion','fecha_modificacion',)
+    list_filter = ('descripcion',)
+    search_fields = ('descripcion',)

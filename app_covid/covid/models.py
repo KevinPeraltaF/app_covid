@@ -55,11 +55,23 @@ class EspecialidadMedico(ModeloBase):
     
     def save(self, *args, **kwargs):
         """Save method for Analisis_Radiografico."""
-        self.direccion = self.direccion.lower().strip()
+        self.descripcion = self.descripcion.lower().strip()
         return super(EspecialidadMedico, self).save(*args, **kwargs)
     
     
-
+#vacuna
+class Vacuna(ModeloBase):
+    descripcion = models.CharField("Vacuna", max_length=200 , unique=True)
+     
+    def __str__(self):
+        """Unicode representation of EspecialidadMedico."""
+        return '{}'.format(self.descripcion)
+    
+    def save(self, *args, **kwargs):
+        """Save method for Analisis_Radiografico."""
+        self.descripcion = self.descripcion.lower().strip()
+        return super(Vacuna, self).save(*args, **kwargs)
+  
 #MEDICO
 class Medico(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)

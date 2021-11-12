@@ -2,9 +2,8 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
 from django.forms.forms import Form
-from django.forms.models import inlineformset_factory
 #MODELS
-from .models import Menu,Group,Permission,User,Menu_Groups, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
+from .models import Menu,Group,Permission,User,Menu_Groups,Vacuna, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
 
 class MenuForm(forms.ModelForm):
     
@@ -18,7 +17,7 @@ class MenuForm(forms.ModelForm):
         model = Menu
         fields = '__all__'
         exclude=("usuario_creacion","usuario_modificacion",)
-        field_order = ['is_active', 'is_staff','is_superuser',]
+        
            
 class GrupoForm(forms.ModelForm):
 
@@ -124,6 +123,15 @@ class RayxForm(forms.ModelForm):
      
 
 
-   
+class VacunaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(VacunaForm, self).__init__(*args, **kwargs)
+    
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control '
+            
+    class Meta:
+        model = Vacuna
+        fields = '__all__'
     
     
