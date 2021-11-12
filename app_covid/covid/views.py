@@ -694,10 +694,15 @@ class ReportView(LoginRequiredMixin,TemplateView):
 
 #ANALISIS RADIOGRAFICO
 def predict(file):
-    rutaModelo = os.path.join(settings.BASE_DIR,'plugins\cnnModelo')
-    cnn = load_model(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\modelo8.h5")
-    cnn.load_weights(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\pesos8.h5")
     
+    modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
+    pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
+    #print(modelo)
+    #print(pesos)
+    #cnn = load_model(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\modelo8.h5")
+    #cnn.load_weights(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\pesos8.h5")
+    cnn = load_model(modelo)
+    cnn.load_weights(pesos)
     longitud, altura = 200,200 
     x = load_img(file, target_size=(longitud, altura))
     x = img_to_array(x)
@@ -710,8 +715,6 @@ def predict(file):
     elif respuesta ==0:
         print('covid detectado')
     return respuesta
-
-
 
 class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
