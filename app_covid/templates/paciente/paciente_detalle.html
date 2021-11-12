@@ -34,6 +34,22 @@
                         <th>Dirección:</th>
                         <td colspan="5">{{ object.direccion }}</td>
                     </tr>
+                    <tr>
+                        <th>¿Se encuentra vacunado contra el Covid-19?:</th>
+
+                        <td colspan="5">
+                            {% if object.es_vacunado == True%}
+                            <span class="badge badge-success">SI</span> {% else %}
+                            <span class="badge badge-danger">NO</span>{% endif %}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vacuna aplicada:</th>
+                        <td colspan="5">
+                            {% if object.vacuna %} {{object.vacuna}} {% else %} No tiene vacuna aplicada {% endif %}
+                        </td>
+                    </tr>
 
 
                 </tbody>

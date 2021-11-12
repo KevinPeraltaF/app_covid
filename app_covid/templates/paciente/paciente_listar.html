@@ -53,8 +53,8 @@
                                     <th>Cédula</th>
                                     <th>Género</th>
                                     <th>Dirección</th>
-                                    <th>Activo</th>
-                                    <th>Grupo</th>
+
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,18 +65,8 @@
                                     <td>{{ dato.usuario.cedula }}</td>
                                     <td>{{ dato.usuario.genero }}</td>
                                     <td>{{ dato.direccion }}</td>
-                                    <td>
-                                        {% if dato.usuario.is_active == True %}
-                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="activo"><span class="fa fa-check "></span></a> {% else %}
-                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="activo"><span
-                                                class="fa fa-times "></span></a> {% endif %}
-                                    </td>
-                                    <td>
 
-                                        {% for dato in dato.usuario.groups.all %}
-                                        <li class="badge badge-pill badge-info">{{ dato }}</li>
-                                        {% endfor %}
-                                    </td>
+
 
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">

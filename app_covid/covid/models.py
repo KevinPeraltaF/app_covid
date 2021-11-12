@@ -38,8 +38,8 @@ class ModeloBase(models.Model):
 
 class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula', unique = True)
-    tipo_genero = (('N', 'Ninguno'), ('M', 'Masculino'), ('F', 'Femenino'))
-    genero = models.CharField('Género', choices=tipo_genero, default='N', max_length=1)
+    tipo_genero = (('M', 'Masculino'), ('F', 'Femenino'))
+    genero = models.CharField('Género', choices=tipo_genero, default='M', max_length=1)
     
     def get_full_name(self):
         """Unicode representation of Analisis_Radiografico."""
@@ -84,10 +84,12 @@ class Medico(ModeloBase):
 class Paciente(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
      direccion = models.CharField("Dirección", max_length=200 )
-     
+     es_vacunado = models.BooleanField(verbose_name="¿Está usted vacunado contra el covid?" )
+     vacuna = models.ForeignKey(Vacuna, verbose_name="Tipo de Vacuna", on_delete=models.PROTECT,null=True,blank=True)
+     Diagnostico = models.TextField(verbose_name="Diágnostico previo",null=True)
      def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
-        return '{}'.format(self.usuario.get_full_name())
+        return '{} CI: {}'.format(self.usuario.get_full_name(),self.usuario.cedula)
     
      def save(self, *args, **kwargs):
         """Save method for Analisis_Radiografico."""

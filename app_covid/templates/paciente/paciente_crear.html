@@ -23,8 +23,13 @@
 
     </div>
     <div class="row">
+
         <div class="col-lg-8 offset-lg-2">
+
+
+
             <form method="post" class="card-box" enctype="multipart/form-data">
+                <h3 class="card-title">Información Personal del Paciente</h3>
                 <div class="row">
                     <div class="col-md-6">
                         <fieldset class="form-group">
@@ -54,12 +59,16 @@
                             {{form2.genero.label}} {{form2.genero}}
                         </fieldset>
                     </div>
+                    <div class="container">
+                        <h3 class="card-title">Información Médica</h3>
+                    </div>
 
                     {% include "form_snippet.html" %}
 
 
-
                 </div>
+
+
                 <div class="m-t-20 text-center">
                     <a type="button" class="btn btn-danger submit-btn" href="{% url 'paciente_listar' %}">Cancelar</a>
                     <button class="btn btn-primary submit-btn">Guardar Registro</button>
