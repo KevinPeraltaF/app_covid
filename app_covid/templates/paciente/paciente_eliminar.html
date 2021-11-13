@@ -6,7 +6,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <form action="{% url 'medico_eliminar' object.id %}" method="post">
+        <form action="{% url 'paciente_eliminar' object.id %}" method="post">
             {% csrf_token %}
             <div class="modal-body">
                 ¿Está seguro que desea eliminar el registro: "<strong>{{ object.usuario.last_name }} {{ object.usuario.first_name }} </strong>"?

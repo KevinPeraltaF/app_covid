@@ -8,16 +8,21 @@
             <div class="alert alert-danger" role="alert">
                 <h5 class="icon fas fa-bin">Error al guardar el registro!</h5>
                 <ul>
-                    {% for field in form %} {% for error in field.errors %}
+                    {% for field in form %}
+                     {% for error in field.errors %}
                     <li>
                         {{error}}
                     </li>
-                    {% endfor %} {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
 
                 </ul>
 
             </div>
-            {% endif %}
+            {% endif %} 
+            
+
+           
 
         </div>
 
@@ -32,35 +37,35 @@
                 <div class="row">
                     <div class="col-md-6">
                         <fieldset class="form-group">
-                            {{form2.last_name.label}} {{form2.last_name}} {{ form2.last_name.errors }}
+                            {{form2.last_name.label_tag}} {{form2.last_name}} {{ form2.last_name.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-6">
                         <fieldset class="form-group">
-                            {{form2.first_name.label}} {{form2.first_name}} {{ form2.first_name.errors }}
+                            {{form2.first_name.label_tag}} {{form2.first_name}} {{ form2.first_name.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-4">
                         <fieldset class="form-group">
-                            {{form2.cedula.label}} {{form2.cedula}}
+                            {{form2.cedula.label_tag}} {{form2.cedula}}{{ form2.cedula.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-4">
 
                         <fieldset class="form-group">
-                            {{form2.email.label}} {{form2.email}}{{ form2.email.errors }}
+                            {{form2.email.label_tag}} {{form2.email}}{{ form2.email.errors }}
                         </fieldset>
                     </div>
 
                     <div class="col-md-4">
                         <fieldset class="form-group">
 
-                            {{form2.genero.label}} {{form2.genero}}
+                            {{form2.genero.label_tag}} {{form2.genero}}{{ form2.email.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-12">
                         <fieldset class="form-group">
-                            {{form.direccion.label}} {{form.direccion}} {{ form.direccion.errors }}
+                            {{form.direccion.label_tag}} {{form.direccion}} {{ form.direccion.errors }}
                         </fieldset>
                     </div>
                     <div class="container">
@@ -70,17 +75,17 @@
 
                     <div class="col-md-12">
                         <fieldset class="form-group">
-                            {{form.es_vacunado.label}} {{form.es_vacunado}} {{ form.es_vacunado.errors }}
+                            {{form.es_vacunado.label_tag}} {{form.es_vacunado}} {{ form.es_vacunado.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-12">
                         <fieldset class="form-group " id="id_div_vacuna">
-                            {{form.vacuna.label}} {{form.vacuna}} {{ form.vacuna.errors }}
+                            {{form.vacuna.label_tag}} {{form.vacuna}} {{ form.vacuna.errors }}
                         </fieldset>
                     </div>
                     <div class="col-md-12">
                         <fieldset class="form-group ">
-                            {{form.Diagnostico.label}} {{form.Diagnostico}} {{ form.Diagnostico.errors }}
+                            {{form.Diagnostico.label_tag}} {{form.Diagnostico}} {{ form.Diagnostico.errors }}
                         </fieldset>
                     </div>
 

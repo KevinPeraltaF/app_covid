@@ -1,4 +1,5 @@
 #DJANGO
+
 from django.db import models
 from django.contrib.auth.models import Group, AbstractUser, Permission
 from django.conf import settings
@@ -83,7 +84,7 @@ class Medico(ModeloBase):
 # PACIENTE
 class Paciente(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
-     direccion = models.CharField("Dirección", max_length=200 )
+     direccion = models.CharField("Dirección", max_length=200,blank=True )
      es_vacunado = models.BooleanField(verbose_name="¿Está usted vacunado contra el covid?" )
      vacuna = models.ForeignKey(Vacuna, verbose_name="Tipo de Vacuna", on_delete=models.PROTECT,null=True,blank=True)
      Diagnostico = models.TextField(verbose_name="Diágnostico previo",null=True, blank=True)

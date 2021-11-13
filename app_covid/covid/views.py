@@ -620,8 +620,9 @@ class PacienteCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessa
             Paciente.save()
             return HttpResponseRedirect(self.get_success_url())
         else :
-            
             return self.render_to_response(self.get_context_data(form=form,form2=form2))
+        
+    
     
 class PacienteUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_paciente'

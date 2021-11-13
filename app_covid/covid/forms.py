@@ -49,6 +49,10 @@ class UserForm(forms.ModelForm):
             self.fields['first_name'].widget.attrs['class'] = "form-control solo-letra"
             self.fields['last_name'].widget.attrs['class'] = "form-control solo-letra"
             self.fields['cedula'].widget.attrs['class'] = "form-control solo-numero"
+            self.fields['first_name'].required = True
+            self.fields['last_name'].required = True
+            self.fields['email'].required = True
+            self.fields['cedula'].required = True
     
 class MenuGrupoForm(forms.ModelForm):
 
@@ -105,6 +109,7 @@ class MedicoForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
             self.fields['especialidad'].widget.attrs['class'] = "form-control select"
+            self.fields['especialidad'].required = True
             
     class Meta:
         model = Medico
