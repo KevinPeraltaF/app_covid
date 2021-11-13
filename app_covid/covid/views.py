@@ -25,8 +25,6 @@ import os
 import numpy as np
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
 from tensorflow.python.keras.models import load_model
-
-
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
     template_name = "registration/dashboard.html"
@@ -688,16 +686,13 @@ class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = Paciente
     template_name = "paciente/paciente_detalle.html"
 
+#REPORTE ESTADISTI
 class ReportView(LoginRequiredMixin,TemplateView):
     template_name = "reporte/reportes.html"
     def get_context_data(self, **kwargs):
-        permisos = Group.objects.filter(user=self.request.user)
         context = super().get_context_data(**kwargs)
-        context['titulo'] ="Reportes"
-        if self.request.user.is_superuser:
-            context['MenuSuperUser'] = Menu.objects.all()
-        else:
-            context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
+        context['titulo'] ="Reportes estadísticos Covid-19"
+      
         return context
 
 #ANALISIS RADIOGRAFICO
@@ -823,6 +818,7 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         context['titulo'] = "Registro de Analisis rádiograficos"
         return context
 
+#ANALISIS RESULTADO VISIBLE SOLO PARA EL PROPIO PACIENTE
 class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
     model = Analisis_Radiografico

@@ -12,7 +12,8 @@ class MenuForm(forms.ModelForm):
         
         for visible in self.visible_fields():
             self.fields['grupo'].widget.attrs['class'] = "duallistbox"
-            visible.field.widget.attrs['class'] = 'form-control form-control  form-row ' 
+            visible.field.widget.attrs['class'] = ' form-control  form-row ' 
+            self.fields['titulo'].widget.attrs['class'] = 'form-control solo-letra'
     class Meta:
         model = Menu
         fields = '__all__'
@@ -27,7 +28,7 @@ class GrupoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(GrupoForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['class'] = "form-control"
+        self.fields['name'].widget.attrs['class'] = "form-control solo-letra"
         self.fields['permissions'].widget.attrs['class'] = "duallistbox"
         self.fields['permissions'].queryset = Permission.objects.exclude(content_type__model__in=['session', 'usuarios', 'permission', 'contenttype', 'logentry', 'configuracion'])
             
@@ -45,6 +46,9 @@ class UserForm(forms.ModelForm):
             self.fields['groups'].widget.attrs['class'] = "duallistbox"
             visible.field.widget.attrs['class'] = 'form-control'
             self.fields['genero'].widget.attrs['class'] = "form-control select"
+            self.fields['first_name'].widget.attrs['class'] = "form-control solo-letra"
+            self.fields['last_name'].widget.attrs['class'] = "form-control solo-letra"
+            self.fields['cedula'].widget.attrs['class'] = "form-control solo-numero"
     
 class MenuGrupoForm(forms.ModelForm):
 
@@ -65,6 +69,9 @@ class PerfilForm(forms.ModelForm):
     
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['first_name'].widget.attrs['class'] = "form-control solo-letra"
+            self.fields['last_name'].widget.attrs['class'] = "form-control solo-letra"
+            self.fields['cedula'].widget.attrs['class'] = "form-control solo-numero"
     class Meta:
         model = User
         fields = '__all__'
@@ -84,6 +91,8 @@ class EspecialidadMedicoForm(forms.ModelForm):
     
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['descripcion'].widget.attrs['class'] = "form-control solo-letra"
+           
             
     class Meta:
         model = EspecialidadMedico
@@ -146,6 +155,7 @@ class VacunaForm(forms.ModelForm):
     
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['descripcion'].widget.attrs['class'] = "form-control solo-letra"
             
     class Meta:
         model = Vacuna
