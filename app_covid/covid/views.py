@@ -31,13 +31,20 @@ from tensorflow.python.keras.models import load_model
 class Dashboard_view(LoginRequiredMixin,TemplateView):
     template_name = "registration/dashboard.html"
     def get_context_data(self, **kwargs):
+        busqueda = self.request.GET.get("buscar")
         permisos = Group.objects.filter(user=self.request.user)
         context = super().get_context_data(**kwargs)
         context['titulo'] ="Menú Principal"
         if self.request.user.is_superuser:
-            context['MenuSuperUser'] = Menu.objects.all()
+            if not busqueda:
+                context['MenuSuperUser'] = Menu.objects.all()
+            else:
+                context['MenuSuperUser'] = Menu.objects.filter(titulo__icontains=busqueda)
         else:
-            context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
+            if not busqueda:
+                context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True)
+            else:
+                context['menu'] = Menu_Groups.objects.filter( group__in=permisos, activo =True, menu__activo = True,menu__titulo__icontains=busqueda)
         return context
 
 class Error404View(TemplateView):
@@ -758,6 +765,8 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
 class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
     permission_required = 'covid.add_analisis_radiografico'
     model = Analisis_Radiografico
+    initial = {'doctor': '1'
+               }
     form_class = RayxForm
     template_name = "analisis/analisis_crear.html"
     success_url = reverse_lazy('rayx_listar')

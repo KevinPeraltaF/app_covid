@@ -1,16 +1,36 @@
-{% extends 'plantillaBase.html' %} {% block content %} {% if user.is_superuser %} {% for dato in MenuSuperUser %}
+{% extends 'plantillaBase.html' %} {% block content %}
+
+<div>
+    <form action="" method="GET">
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus focused">
+                    <input type="text" name="buscar" id="id_buscar" class="form-control float-right" placeholder="Buscar">
+
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-md-3">
+                <button type="submit" class="btn btn-success btn-block"> Filtrar </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if user.is_superuser %} {% for dato in MenuSuperUser %}
 
 <button onclick="location.href= '{{dato.url}}'" class=" btn btn-light rounded-0 w-25 p-3 mx-auto align-middle">
-     <a class="border-0 ">
-         <img class=" figure-img img-fluid rounded " src="{{dato.icono.url}}" width="70px" alt="Card image cap">
-         <h6 class=" text-center ">{{dato.titulo.upper}}</h6>
-         <figcaption class="figure-caption">{{dato.descripcion}}</figcaption>
-     </a>
- </button> {% endfor %} {%endif %} {% for dato in menu %}
+    <a class="border-0 ">
+        <img class=" figure-img img-fluid rounded " src="{{dato.icono.url}}" width="70px" alt="Card image cap">
+        <h6 class=" text-center ">{{dato.titulo.upper}}</h6>
+        <figcaption class="figure-caption">{{dato.descripcion}}</figcaption>
+    </a>
+</button> {% endfor %} {%endif %} {% for dato in menu %}
 <button onclick="location.href= '{{dato.menu.url}}'" class=" btn btn-light rounded-0 w-25 p-3 mx-auto align-middle">
-     <a class="border-0 ">
-         <img class=" figure-img img-fluid rounded " src="{{dato.menu.icono.url}}" width="70px" alt="Card image cap">
-         <h6 class=" text-center ">{{dato.menu.titulo.upper}}</h6>
-         <figcaption class="figure-caption">{{dato.menu.descripcion}}</figcaption>
-     </a>
- </button> {% endfor %} {% endblock %}
+    <a class="border-0 ">
+        <img class=" figure-img img-fluid rounded " src="{{dato.menu.icono.url}}" width="70px" alt="Card image cap">
+        <h6 class=" text-center ">{{dato.menu.titulo.upper}}</h6>
+        <figcaption class="figure-caption">{{dato.menu.descripcion}}</figcaption>
+    </a>
+</button> {% endfor %} {% endblock %}
