@@ -86,7 +86,7 @@ class Paciente(ModeloBase):
      direccion = models.CharField("Dirección", max_length=200 )
      es_vacunado = models.BooleanField(verbose_name="¿Está usted vacunado contra el covid?" )
      vacuna = models.ForeignKey(Vacuna, verbose_name="Tipo de Vacuna", on_delete=models.PROTECT,null=True,blank=True)
-     Diagnostico = models.TextField(verbose_name="Diágnostico previo",null=True)
+     Diagnostico = models.TextField(verbose_name="Diágnostico previo",null=True, blank=True)
      def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
         return '{} CI: {}'.format(self.usuario.get_full_name(),self.usuario.cedula)

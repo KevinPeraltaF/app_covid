@@ -1,10 +1,10 @@
 #DJANGO
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
-from django.forms.forms import Form
+
 #MODELS
 from .models import Menu,Group,Permission,User,Menu_Groups,Vacuna, EspecialidadMedico,Medico,Paciente,Analisis_Radiografico
-
+from crum import get_current_user
 class MenuForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
@@ -44,6 +44,7 @@ class UserForm(forms.ModelForm):
         for visible in self.visible_fields():
             self.fields['groups'].widget.attrs['class'] = "duallistbox"
             visible.field.widget.attrs['class'] = 'form-control'
+            self.fields['genero'].widget.attrs['class'] = "form-control select"
     
 class MenuGrupoForm(forms.ModelForm):
 
@@ -94,6 +95,8 @@ class MedicoForm(forms.ModelForm):
     
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['especialidad'].widget.attrs['class'] = "form-control select"
+            
     class Meta:
         model = Medico
         fields = '__all__'
@@ -105,19 +108,24 @@ class PacienteForm(forms.ModelForm):
     
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['es_vacunado'].widget.attrs['onclick'] = "ocultarCampos()"
+           
+            
     class Meta:
         model = Paciente
         fields = '__all__'
         exclude= ('usuario',)
       
 
-from crum import get_current_user
+
 class RayxForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RayxForm, self).__init__(*args, **kwargs)
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control '
+            self.fields['paciente'].widget.attrs['class'] = "form-control select"
+            self.fields['doctor'].widget.attrs['class'] = "form-control select"
         user = get_current_user()  
         id_usuario = user.pk
         usuario  = User.objects.get(pk=id_usuario)

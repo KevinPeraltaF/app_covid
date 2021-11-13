@@ -15,8 +15,8 @@
     <form action="" method="GET">
         <div class="row filter-row">
             <div class="col-sm-6 col-md-3">
-                <div class="form-group form-focus select-focus focused">
-                    <select class="form-control select floating select2-hidden-accessible " name="grupo" id="id_grupo">
+                <div class="form-group form-focus  focused">
+                    <select class="form-control " name="grupo" id="id_grupo">
 
                         {% for dato in grupos %}
                         <option value="{{ dato.id}}">{{ dato.name }}</option>

@@ -53,7 +53,7 @@
                                     <th>Cédula</th>
                                     <th>Género</th>
                                     <th>Dirección</th>
-
+                                    <th>Es Vacunado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -65,6 +65,11 @@
                                     <td>{{ dato.usuario.cedula }}</td>
                                     <td>{{ dato.usuario.genero }}</td>
                                     <td>{{ dato.direccion }}</td>
+                                    <td>
+                                        {% if dato.es_vacunado == True %}
+                                        <a class="badge " data-toggle="tooltip" data-placement="top" title="es vacunado"><span class="fa fa-check "></span></a> {% else %}
+                                        <a class="badge" data-toggle="tooltip" data-placement="top" title="es vacunado"><span class="fa fa-times "></span></a> {% endif %}
+                                    </td>
 
 
 

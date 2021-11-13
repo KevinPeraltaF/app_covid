@@ -23,6 +23,8 @@
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <form method="post" class="card-box" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3 class="card-title">Información Personal del Paciente</h3>
                 <div class="row">
                     <div class="col-md-6">
                         <fieldset class="form-group">
@@ -51,8 +53,31 @@
                             {{form2.genero.label}} {{form2.genero}}
                         </fieldset>
                     </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            {{form.direccion.label}} {{form.direccion}}
+                        </fieldset>
+                    </div>
+                    <div class="container">
+                        <h3 class="card-title">Información Médica</h3>
+                    </div>
 
-                    {% include "form_snippet.html" %}
+                    <div class="col-md-12">
+                        <fieldset class="form-group">
+                            {{form.es_vacunado.label}} {{form.es_vacunado}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group " id="id_div_vacuna">
+                            {{form.vacuna.label}} {{form.vacuna}}
+                        </fieldset>
+                    </div>
+                    <div class="col-md-12">
+                        <fieldset class="form-group ">
+                            {{form.Diagnostico.label}} {{form.Diagnostico}}
+                        </fieldset>
+                    </div>
+
 
 
 
@@ -66,4 +91,19 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} {% block content_extra_js %}
+<script>
+    function ocultarCampos() {
+
+        var div = document.getElementById("id_div_vacuna");
+        if ($('#id_es_vacunado').prop('checked')) {
+            div.style.display = "block";
+
+        } else {
+            div.style.display = "none";
+
+        }
+    }
+    window.onload = ocultarCampos;
+</script>
+{% endblock content_extra_js %}
