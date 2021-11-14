@@ -60,8 +60,8 @@ urlpatterns = [
     path('rayx/Eliminar/<int:pk>',key.RayxDeleteView.as_view(),name="rayx_eliminar"),
     path('rayx/Detalle/<int:pk>',key.RayxDetailView.as_view(),name="rayx_detalle"),
     
-     path('myresultado/',key.MyresultListView.as_view(),name="myresultado_listar"),
-     
+    path('myresultado/',key.MyresultListView.as_view(),name="myresultado_listar"),
+    path('myresultado/Detalle/<int:pk>',key.MyresultRayxDetailView.as_view(),name="myresultado_detalle"), 
      
     path('vacuna/', key.VacunaListView.as_view(), name="vacuna_listar") ,
     path('vacuna/crear/', key.VacunaCreateView.as_view(), name="vacuna_crear") ,

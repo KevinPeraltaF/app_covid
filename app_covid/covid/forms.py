@@ -79,7 +79,7 @@ class PerfilForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude=("password","last_login","user_permissions","date_joined","username","groups","is_active","is_staff","is_superuser")
+        exclude=("password","last_login","user_permissions","date_joined","username","groups","is_active","is_staff","is_superuser",'estado_registro')
        
 class CambiarContraseñaForm(PasswordChangeForm):
 

@@ -9,7 +9,7 @@
         <form action="{% url 'rayx_eliminar' object.id %}" method="post">
             {% csrf_token %}
             <div class="modal-body">
-                ¿Está seguro que desea eliminar el registro: "<strong> Paciente:   </strong> {{ object.paciente }} <strong>resultado:</strong> {% if object.result_analisis == True%}
+                ¿Está seguro que desea eliminar el registro: "<strong> Paciente:   </strong> {{ object.paciente }} <strong>resultado:</strong> {% if object.result_analisis == False%}
                 <span class="badge badge-danger">COVID DETECTADO</span> {% else %}
                 <span class="badge badge-success">SIN COVID</span> {% endif %} "?
             </div>

@@ -890,7 +890,7 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         return super().form_valid(form)
        
 class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
-    permission_required = 'covid.view_analisis_radiografico'
+    permission_required = ('covid.view_analisis_radiografico')
     model = Analisis_Radiografico
     template_name = "analisis/analisis_detalle.html"
 
@@ -906,7 +906,7 @@ class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         return super(RayxDeleteView, self).delete(request, *args, **kwargs)
     
 class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
-    permission_required = 'covid.change_especialidadmedico'
+    permission_required = 'covid.change_analisis_radiografico'
     model = Analisis_Radiografico
     form_class = RayxForm
     template_name = "analisis/analisis_editar.html"
@@ -946,6 +946,11 @@ class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         context['titulo'] = "Resultado de Mis Radiografias"
         return context
 
+class MyresultRayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = ( 'covid.see_view_Analisis_paciente_only',)
+    model = Analisis_Radiografico
+    template_name = "analisis/analisisPorPaciente_detalle.html"
+    
 #VACUNA  
 class VacunaListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_vacuna'

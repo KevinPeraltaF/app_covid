@@ -55,8 +55,8 @@
                                         <div class="dropdown dropdown-action">
                                             <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                {% if perms.covid.view_analisis_radiografico %}
-                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'rayx_detalle' dato.id%}')"><i
+                                                {% if perms.covid.see_view_Analisis_paciente_only %}
+                                                <a class="dropdown-item" onclick="abrirModalDetalle('{% url 'myresultado_detalle' dato.id%}')"><i
                                                         class="fa fa-eye  m-r-5"></i>Ver</a>{% endif %}
 
                                             </div>

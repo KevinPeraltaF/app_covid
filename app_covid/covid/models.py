@@ -37,6 +37,8 @@ class ModeloBase(models.Model):
         super(ModeloBase, self).save(*args, **kwargs)
 
 
+
+
 class User(AbstractUser,ModeloBase):
     cedula=models.CharField(max_length=10, verbose_name='Cédula', unique = True)
     tipo_genero = (('M', 'Masculino'), ('F', 'Femenino'))
