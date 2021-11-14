@@ -26,7 +26,7 @@ class ModeloBase(models.Model):
     usuario_creacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Creación', related_name='+', blank=True, null=True,on_delete=models.PROTECT, editable=False)
     usuario_modificacion = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Usuario Modificación', related_name='+', blank=True, null=True,on_delete=models.PROTECT , editable=False)
     fecha_modificacion = models.DateTimeField(verbose_name='Fecha Modificación', auto_now=True)
-
+    estado_registro = models.BooleanField(verbose_name="Estado del registro",default=True)
     def save(self, *args, **kwargs):
         user = get_current_user()
         if user and not user.pk:
@@ -164,7 +164,7 @@ class Menu_Groups(models.Model):
     activo = models.BooleanField(default=True)
 
   
-class Analisis_Radiografico(models.Model):
+class Analisis_Radiografico(ModeloBase):
     paciente = models.ForeignKey(Paciente,on_delete=models.CASCADE, related_name="paciente_user")
     doctor = models.ForeignKey(Medico,on_delete=models.CASCADE, related_name="doctor_user")
     imagen = models.ImageField(verbose_name="Imagen de Rayos X", upload_to='muestra_covid/')
