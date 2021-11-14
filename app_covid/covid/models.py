@@ -74,13 +74,20 @@ class Vacuna(ModeloBase):
         return super(Vacuna, self).save(*args, **kwargs)
   
 #MEDICO
-class Medico(ModeloBase):
-     usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
-     especialidad = models.ForeignKey(EspecialidadMedico, verbose_name="Especialidad", on_delete=models.PROTECT)
-     def __str__(self):
+class Medico(ModeloBase):      
+        
+    usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
+    especialidad = models.ForeignKey(EspecialidadMedico, verbose_name="Especialidad", on_delete=models.PROTECT)
+    def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
         return '{}'.format(self.usuario.get_full_name())
     
+    class Meta:
+        '''Meta doctor'''
+        permissions = (
+            ("see_view_report", "Can_view_report"),
+        )
+         
 # PACIENTE
 class Paciente(ModeloBase):
      usuario  = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="Usuario",on_delete=models.PROTECT)
@@ -168,6 +175,12 @@ class Analisis_Radiografico(models.Model):
         """Meta definition for Analisis_Radiografico."""
         verbose_name = 'Analisis'
         verbose_name_plural = 'Analisis'
+        
+        permissions = (
+            ("see_view_Analisis_paciente_only", "Can_view_Analisis_paciente_only"),
+        )
+         
+        
 
     def __str__(self):
         """Unicode representation of Analisis_Radiografico."""

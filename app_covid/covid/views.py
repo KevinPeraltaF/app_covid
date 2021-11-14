@@ -688,7 +688,8 @@ class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     template_name = "paciente/paciente_detalle.html"
 
 #REPORTE ESTADISTI
-class ReportView(LoginRequiredMixin,TemplateView):
+class ReportView(LoginRequiredMixin,PermissionRequiredMixin,TemplateView):
+    permission_required = 'covid.see_view_report'
     template_name = "reporte/reportes.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -821,7 +822,7 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
 
 #ANALISIS RESULTADO VISIBLE SOLO PARA EL PROPIO PACIENTE
 class MyresultListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
-    permission_required = 'covid.view_analisis_radiografico'
+    permission_required = 'covid.see_view_Analisis_paciente_only'
     model = Analisis_Radiografico
     paginate_by = 7
     template_name = "analisis/analisisPorPaciente_listar.html"
