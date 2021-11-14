@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-duallistbox.min.css'%}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css'%}">
     <link href="{% static 'css/select2.min.css'%}" rel="stylesheet">
-    <link href="{% static 'css/select2-bootstrap4.min.css'%}" rel="stylesheet"> {% block content_extra_css %} {% endblock content_extra_css %}
+    <link href="{% static 'css/select2-bootstrap4.min.css'%}" rel="stylesheet"> {% block content_extra_css %} {%endblock content_extra_css %}
 </head>
 
 <body>
@@ -29,7 +29,8 @@
             <ul class="nav user-menu float-right">
 
                 <li class="nav-item dropdown has-arrow">
-                    <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown"></span><span>{{request.user }}</span></a>
+                    <a href="#" class="dropdown-toggle nav-link user-link"
+                        data-toggle="dropdown"></span><span>{{request.user }}</span></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{% url 'perfilUsuario' %}">Perfil</a> {% if user.is_staff%}
                         <a class="dropdown-item" target="_blank" href="/admin">Django</a> {% endif %}
@@ -40,69 +41,74 @@
                     </div>
                 </li>
             </ul>
-            <div class="dropdown mobile-user-menu float-right ">
-                <a href="# " class="nav-link dropdown-toggle " data-toggle="dropdown " aria-expanded="false ">
-                    <i class="fa fa-ellipsis-v "></i></a>
-                <div class="dropdown-menu dropdown-menu-right ">
-                    <a class="dropdown-item " href="{% url 'perfilUsuario' %} ">Perfil</a> {% if user.is_staff %}
-                    <a class="dropdown-item " target="_blank " href="/admin ">Django</a> {% endif %}
+
+            <div class="dropdown mobile-user-menu float-right">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <i
+                        class="fa fa-ellipsis-v"></i>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'perfilUsuario' %}">Perfil</a> {% if user.is_staff%}
+                    <a class="dropdown-item" target="_blank" href="/admin">Django</a> {% endif %}
 
 
-
-                    <a class="dropdown-item " href="{% url 'logout'%} ">Cerrar Sesión</a>
+                    <a class="dropdown-item " href="{% url 'logout'%} ">CerrarSesión</a>
                 </div>
-            </div>
-        </div>
 
-        <div class="page-wrapper ">
 
-            <div class="content ">
-                <div class="row mb-2 ">
-                    <div class="col-sm-8 ">
-                        <h1 class="m-0 text-dark ">{{ titulo.upper }}</h1>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-sm-4 ">
-                        <ol class="breadcrumb float-sm-right ">
-                            <li class="breadcrumb-item "><a href="{% url 'dashboard'%} ">Inicio</a></li>
-                            <li class="breadcrumb-item active ">Menú</li>
-                        </ol>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-                {% block content %} {% endblock %}
+
+
 
             </div>
 
+            <div class="page-wrapper ">
+
+                <div class="content ">
+                    <div class="row mb-2 ">
+                        <div class="col-sm-8 ">
+                            <h1 class="m-0 text-dark ">{{ titulo.upper }}</h1>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-sm-4 ">
+                            <ol class="breadcrumb float-sm-right ">
+                                <li class="breadcrumb-item "><a href="{% url 'dashboard'%} ">Inicio</a></li>
+                                <li class="breadcrumb-item active ">Menú</li>
+                            </ol>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    {% block content %} {% endblock %}
+
+                </div>
+
+            </div>
         </div>
-    </div>
-    <div class="sidebar-overlay " data-reff=" "></div>
+        <div class="sidebar-overlay " data-reff=" "></div>
 
 
-    <script src="{% static 'js/jquery-3.2.1.min.js'%} "></script>
-    <script src="{% static 'js/popper.min.js'%} "></script>
-    <script src="{% static 'js/bootstrap.min.js'%} "></script>
-    <script src="{% static 'js/jquery.slimscroll.js'%} "></script>
-    <script src="{% static 'js/app.js'%} "></script>
-    <script src="{% static 'js/jquery.bootstrap-duallistbox.min.js' %} "></script>
-    <script src="{% static 'js/select2.min.js' %}"></script>
-    <script src="{% static 'js/ruc_jquery_validator.min.js' %}"></script>
-    <script>
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
-    </script>
-    <script>
-        $(function() {
-            $('.select').select2({
-                theme: "bootstrap4",
+        <script src="{% static 'js/jquery-3.2.1.min.js'%} "></script>
+        <script src="{% static 'js/popper.min.js'%} "></script>
+        <script src="{% static 'js/bootstrap.min.js'%} "></script>
+        <script src="{% static 'js/jquery.slimscroll.js'%} "></script>
+        <script src="{% static 'js/app.js'%} "></script>
+        <script src="{% static 'js/jquery.bootstrap-duallistbox.min.js' %} "></script>
+        <script src="{% static 'js/select2.min.js' %}"></script>
+        <script src="{% static 'js/ruc_jquery_validator.min.js' %}"></script>
+        <script>
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+        </script>
+        <script>
+            $(function () {
+                $('.select').select2({
+                    theme: "bootstrap4",
+                });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        $(document).ready(function() {
-            $('.solo-letra').bind('keypress', function(event) {
+        <script>
+            $(document).ready(function () {
+                $('.solo-letra').bind('keypress', function (event) {
                     var regex = new RegExp("^[a-zA-Z ]+$");
                     var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
                     if (!regex.test(key)) {
@@ -111,11 +117,11 @@
                     }
                 }
 
-            );
-        });
+                );
+            });
 
-        $(document).ready(function() {
-            $('.solo-numero').bind('keypress', function(event) {
+            $(document).ready(function () {
+                $('.solo-numero').bind('keypress', function (event) {
                     var regex = new RegExp("^[0-9]");
                     var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
                     if (!regex.test(key)) {
@@ -124,20 +130,20 @@
                     }
                 }
 
-            );
-        });
+                );
+            });
 
 
-        $("#id_cedula").validarCedulaEC({
+            $("#id_cedula").validarCedulaEC({
 
-            onInvalid: function() {
-                window.alert("cédula Ecuatoriana inválida.");
-                console.log(this);
-            }
-        });
-    </script>
+                onInvalid: function () {
+                    window.alert("cédula Ecuatoriana inválida.");
+                    console.log(this);
+                }
+            });
+        </script>
 
-    {% block content_extra_js %} {% endblock content_extra_js %}
+        {% block content_extra_js %} {% endblock content_extra_js %}
 </body>
 
 </html>
