@@ -1,4 +1,78 @@
 {% extends 'plantillaBase.html' %} {% block content %}
+<style>
+
+    
+
+    
+    body { background: none; }
+
+    #content { padding-top: 60px;
+        padding-bottom: 60px;
+        background: none; }
+        
+    h4 { font-size: 16px;
+        margin: 0; }
+    
+    h5 { margin: 0; }
+    
+    h3 { font-size: 20px;
+        line-height: 20px; }
+        
+    .pd { padding: 5px 15px 15px 15px; }
+    .icon {
+        width: 160px;
+        float: left;
+        height: 190px;
+        background: #fafafa;
+    
+        /*background: #0c0c0c;*/
+        margin-right: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        border-radius: 15px 15px;
+        vertical-align: middle;
+    
+    }
+    
+    .icon.hovered {
+        /*background: #999;*/
+        background: #9cb539;
+        background: #13c2c2 ;
+        background: #00CFDD;
+        background: rgba(90,141,238,.15);
+        color: white;
+        color: #5A8DEE;
+        cursor: pointer;
+        /*border: 2.5px solid #859a2f;*/
+        /*background-image: linear-gradient(to bottom, #038fde , #20C997);*/
+    }
+    
+    .icon .iconname {
+        font-weight: bold;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+        font-size: 14px;
+        line-height: 10px; }
+    
+    .icon .icondesc { font-weight: normal;
+        font-size: 10px;
+        line-height: 10px; }
+    
+    .icon .iconimage {
+        width: 100%;
+        text-align: center;
+        padding-top: 10px;
+    }
+    
+    .icon .iconimage img { height: 80px; }
+    
+    
+  
+    
+
+</style>
 
 <div>
     <form action="" method="GET">
@@ -18,19 +92,67 @@
     </form>
 </div>
 
-{% if user.is_superuser %} {% for dato in MenuSuperUser %}
 
-<button onclick="location.href= '{{dato.url}}'" class=" btn btn-light rounded-0 w-25 p-3 mx-auto align-middle">
-    <a class="border-0 ">
-        <img class=" figure-img img-fluid rounded " src="{{dato.icono.url}}" width="70px" alt="Card image cap">
-        <h6 class=" text-center ">{{dato.titulo.upper}}</h6>
-        <figcaption class="figure-caption">{{dato.descripcion}}</figcaption>
-    </a>
-</button> {% endfor %} {%endif %} {% for dato in menu %}
-<button onclick="location.href= '{{dato.menu.url}}'" class=" btn btn-light rounded-0 w-25 p-3 mx-auto align-middle">
-    <a class="border-0 ">
-        <img class=" figure-img img-fluid rounded " src="{{dato.menu.icono.url}}" width="70px" alt="Card image cap">
-        <h6 class=" text-center ">{{dato.menu.titulo.upper}}</h6>
-        <figcaption class="figure-caption">{{dato.menu.descripcion}}</figcaption>
-    </a>
-</button> {% endfor %} {% endblock %}
+
+
+
+
+
+{% if user.is_superuser %}
+ {% for dato in MenuSuperUser %}
+ <div class="icon " onclick="location.href= '{{dato.url}}'">
+    <div class="iconimage">
+        <div class="pd">
+            <img  src="{{dato.icono.url}}"  alt="Card image cap">
+        </div>
+    </div>
+    <div class="iconname">
+        <div class="pd">
+            <h4 class="tituloicon">{{dato.titulo.upper}}</h4>
+            <span class="icondesc">{{dato.descripcion}}</span>
+        </div>
+    </div>
+</div>
+
+
+ {% endfor %}
+  {%endif %}
+  
+  
+  {% for dato in menu %}
+
+  <div class="icon" onclick="location.href= '{{dato.menu.url}}'">
+    <div class="iconimage">
+        <div class="pd">
+            <img  src="{{dato.menu.icono.url}}"  alt="Card image cap">
+        </div>
+    </div>
+    <div class="iconname">
+        <div class="pd">
+            <h4 class="tituloicon">{{dato.menu.titulo.upper}}</h4>
+            <span class="icondesc">{{dato.menu.descripcion}}</span>
+        </div>
+    </div>
+</div>
+
+
+ {% endfor %} {% endblock %}
+
+ {% block content_extra_js %}
+ <script>
+    $(".icon").hover(function() {
+        $(this).addClass("hovered");
+    }, function() {
+        $(this).removeClass("hovered");
+    }).click(function() {
+        $.blockUI({message:''});
+        var url = $(this).attr('url');
+        if (url[0] == '/') {
+            location.href = url;
+        } else {
+            location.href = "/" + url;
+        }
+    });
+    </script>
+
+    {% endblock content_extra_js %}
