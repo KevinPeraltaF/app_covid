@@ -167,8 +167,8 @@ class Menu_Groups(models.Model):
 
   
 class Analisis_Radiografico(ModeloBase):
-    paciente = models.ForeignKey(Paciente,on_delete=models.CASCADE, related_name="paciente_user")
-    doctor = models.ForeignKey(Medico,on_delete=models.CASCADE, related_name="doctor_user")
+    paciente = models.ForeignKey(Paciente,on_delete=models.PROTECT, related_name="paciente_user")
+    doctor = models.ForeignKey(Medico,on_delete=models.PROTECT, related_name="doctor_user")
     imagen = models.ImageField(verbose_name="Imagen de Rayos X", upload_to='muestra_covid/')
     result_analisis=models.BooleanField(verbose_name="Libre de Covid" )
     fecha = models.DateTimeField(verbose_name='Fecha de Registro', auto_now_add=True)

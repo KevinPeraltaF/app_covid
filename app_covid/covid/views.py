@@ -18,7 +18,8 @@ from crum import get_current_user
 from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Vacuna,Medico,Paciente,Analisis_Radiografico
 #FORMS
 from .forms import  EspecialidadMedicoForm, MenuForm,GrupoForm, VacunaForm, UserForm,MenuGrupoForm,PerfilForm,CambiarContraseñaForm,MedicoForm,PacienteForm,RayxForm
-
+#
+from django.db.models import ProtectedError
 #IA
 from django.conf import settings
 import os
@@ -105,9 +106,24 @@ class MenuDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
     template_name = "menu/menu_eliminar.html"
     success_url = reverse_lazy('menu_listar')
     success_message = 'Registro Eliminado Exitosamente'
+    
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(MenuDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class MenuUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_menu'
@@ -228,8 +244,22 @@ class GrupoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageM
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(GrupoDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class GrupoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'auth.view_group'
@@ -310,8 +340,22 @@ class UsuarioDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessag
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(UsuarioDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class UsuarioDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_user'
@@ -417,8 +461,22 @@ class EspecialidadMedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,Su
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(EspecialidadMedicoDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class EspecialidadMedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_especialidadmedico'
@@ -546,8 +604,22 @@ class MedicoDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(MedicoDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class MedicoDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_medico'
@@ -679,8 +751,22 @@ class PacienteDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessa
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(PacienteDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
 
 class PacienteDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_paciente'
@@ -902,8 +988,22 @@ class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
     success_message = 'Registro Eliminado Exitosamente'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(RayxDeleteView, self).delete(request, *args, **kwargs)
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
     
 class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,UpdateView):
     permission_required = 'covid.change_analisis_radiografico'
@@ -1011,11 +1111,26 @@ class VacunaDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessage
     template_name = "vacuna/vacuna_eliminar.html"
     success_url = reverse_lazy('vacuna_listar')
     success_message = 'Registro Eliminado Exitosamente'
-
+    
+    
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
-        return super(VacunaDeleteView, self).delete(request, *args, **kwargs)
-
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        try:
+            
+            self.object.delete()
+            messages.success(self.request, self.success_message)
+        except ProtectedError:
+            error_messeage =  "Este registro no puede ser eliminado!!"
+            messages.success(self.request,error_messeage)
+            return HttpResponseRedirect(success_url)
+     
+        return HttpResponseRedirect(success_url)
+    
 class VacunaDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = 'covid.view_vacuna'
     model = Vacuna
