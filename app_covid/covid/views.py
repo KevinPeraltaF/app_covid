@@ -959,9 +959,9 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['titulo'] = "Registro de Analisis rádiograficos"
+        context['titulo'] = "Registro de Analisis radiográficos"
         return context
-    
+
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
         self.object = form.save()
@@ -1017,7 +1017,7 @@ class RayxUpdateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['titulo'] = "Registro de Analisis rádiograficos"
+        context['titulo'] = "Registro de Analisis radiográficos"
         return context
 
 #ANALISIS RESULTADO VISIBLE SOLO PARA EL PROPIO PACIENTE
