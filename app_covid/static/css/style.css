@@ -5455,7 +5455,6 @@ blockquote p {
         margin: 0px;
     }
 }
-
 @media only screen and (max-width: 575.98px) {
     .contact-cat {
         padding-right: 70px;
@@ -5588,3 +5587,25 @@ blockquote p {
         margin-bottom: 10px;
     }
 }
+.loader{
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #e5f3fe;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+.disppear{
+    animation: vanish 1s forwards;
+}
+@keyframes vanish {
+    100%{
+      opacity: 0;
+      visibility: hidden;
+    }
+}  

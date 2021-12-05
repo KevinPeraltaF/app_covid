@@ -8,8 +8,6 @@ django = "*"
 pillow = "*"
 django-crum = "*"
 numpy = "*"
-tensorflow = "*"
-h5py = "*"
 
 [dev-packages]
 

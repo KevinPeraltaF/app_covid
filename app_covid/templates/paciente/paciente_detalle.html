@@ -15,9 +15,13 @@
 
                         <th>Nombres:</th>
                         <td>{{ object.usuario.last_name }} {{ object.usuario.first_name }}</td>
+                        
 
                     </tr>
-
+                    <tr>
+                        <th>Fecha Nacimiento:</th>
+                        <td colspan="5">{{ object.usuario.paciente.fec_nac}}</td>
+                    </tr>
                     <tr>
                         <th>Email:</th>
                         <td colspan="5">{{ object.usuario.email }}</td>

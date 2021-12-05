@@ -1,5 +1,14 @@
-{% extends 'plantillaBase.html' %} {% block content %}
+
+{% extends 'plantillaBase.html' %} 
+{% block loader%}
+
+{% endblock loader%}
+{% block content %}
+
 <div class="content">
+    <div class="loader">
+        <img src="/../../static/img/loaderG.gif" alt="" style="background: #e5f3fe;">
+    </div>
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
 
@@ -20,6 +29,7 @@
         </div>
 
     </div>
+    <div class="change">
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
             <form method="post" class="card-box" enctype="multipart/form-data">
@@ -60,13 +70,34 @@
                 </div>
                 <div class="m-t-20 text-center">
                     <a type="button" class="btn btn-danger submit-btn" href="{% url 'rayx_listar' %}">Cancelar</a>
-                    <button class="btn btn-primary submit-btn">Guardar Registro</button>
+                    <button class="btn btn-primary submit-btn " id="onloadp">Guardar Registro</button>
                 </div>
 
             </form>
         </div>
     </div>
 </div>
-
+</div>
 
 {% endblock %}
+{% block content_extra_js%}
+<script>
+    var loader = document.querySelector(".loader")
+    var divshow = document.querySelector(".change");
+    loader.style.display ='none'
+    window.addEventListener("load", activar);
+    function activar(){
+        divshow.style.display='flex'
+    }
+    $('#onloadp').click(()=>{
+        window.addEventListener("load", vanish);
+        divshow.style.display ='none'
+        loader.style.display ='flex'
+        function vanish() {
+          loader.classList.add("disppear");
+        }
+    });
+    
+</script>
+
+{% endblock content_extra_js%}

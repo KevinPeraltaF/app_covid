@@ -1,4 +1,5 @@
 #DJANGO
+from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.db.models.fields import DateField
 from django.http.response import  HttpResponseRedirect
@@ -23,9 +24,9 @@ from django.db.models import ProtectedError
 #IA
 from django.conf import settings
 import os
-import numpy as np
+""" import numpy as np
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.python.keras.models import load_model
+from tensorflow.python.keras.models import load_model """
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
     template_name = "registration/dashboard.html"
@@ -885,26 +886,27 @@ class ReportView(LoginRequiredMixin,PermissionRequiredMixin,TemplateView):
 
 #ANALISIS RADIOGRAFICO
 def predict(file):
-    modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
-    pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
+    #modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
+    #pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
     #print(modelo)
     #print(pesos)
     #cnn = load_model(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\modelo8.h5")
     #cnn.load_weights(r"C:\Users\User\Desktop\TRABAJO\TITULACION\app_covid\app_covid\static\plugins\cnnModelo\pesos8.h5")
-    cnn = load_model(modelo)
-    cnn.load_weights(pesos)
-    longitud, altura = 200,200 
-    x = load_img(file, target_size=(longitud, altura))
-    x = img_to_array(x)
-    x = np.expand_dims(x, axis=0)
-    arreglo = cnn.predict(x) ##arreglo de 2 dimensiones [[1,0,0]]
-    resultado = arreglo[0]
-    respuesta = np.argmax(resultado)
-    if respuesta==1:
-        print('Sin covid')
-    elif respuesta ==0:
-        print('covid detectado')
-    return respuesta
+    #cnn = load_model(modelo)
+    #cnn.load_weights(pesos)
+    #longitud, altura = 200,200 
+    #x = load_img(file, target_size=(longitud, altura))
+    #x = img_to_array(x)
+    #x = np.expand_dims(x, axis=0)
+    #arreglo = cnn.predict(x) ##arreglo de 2 dimensiones [[1,0,0]]
+    #resultado = arreglo[0]
+    #respuesta = np.argmax(resultado)
+    #if respuesta==1:
+    #    print('Sin covid')
+    #elif respuesta ==0:
+    #    print('covid detectado')
+    #return respuesta
+    return 1
 
 class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
     permission_required = 'covid.view_analisis_radiografico'
@@ -955,6 +957,14 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
     success_url = reverse_lazy('rayx_listar')
     success_message = 'Registro Guardado Exitosamente'
     
+    def cal_edad(self):
+        id_paciente = self.request.POST['paciente']
+        usuario = Paciente.objects.get(id=id_paciente)
+        
+        edad = date.today().year-usuario.fec_nac.year
+        if((date.today().month,date.today().day)<(usuario.fec_nac.month,usuario.fec_nac.day)):
+            edad -=1
+        return edad
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
@@ -964,17 +974,13 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
     
     def form_valid(self, form):
         """If the form is valid, save the associated model."""
-        self.object = form.save()
+        form.instance.edad= self.cal_edad()
         imagen = form.cleaned_data['imagen']
         ruta = os.path.join(settings.MEDIA_ROOT,'muestra_covid')
         file = os.path.join(ruta,str(imagen))
-       
-        
-        form.instance.result_analisis = predict(file)
-        
-       
-        return super().form_valid(form)
-       
+        form.instance.result_analisis = predict(file)   
+        return super().form_valid(form) 
+    
 class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     permission_required = ('covid.view_analisis_radiografico')
     model = Analisis_Radiografico

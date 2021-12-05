@@ -13,6 +13,7 @@ from django.dispatch import receiver
 #auditoria - crum django
 from crum import get_current_user
 
+from datetime import date, datetime, timezone
 
 #MODELO BASE - CLASE ABSTRACTA
 class ModeloBase(models.Model):
@@ -97,6 +98,8 @@ class Paciente(ModeloBase):
      es_vacunado = models.BooleanField(verbose_name="¿Está usted vacunado contra el covid?" )
      vacuna = models.ForeignKey(Vacuna, verbose_name="Tipo de Vacuna", on_delete=models.PROTECT,null=True,blank=True)
      Diagnostico = models.TextField(verbose_name="Diágnostico previo",null=True, blank=True)
+     fec_nac = models.DateField(verbose_name='Fecha de Nacimiento',default=date.today)
+     
      def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
         return '{} CI: {}'.format(self.usuario.get_full_name(),self.usuario.cedula)
@@ -173,6 +176,7 @@ class Analisis_Radiografico(ModeloBase):
     result_analisis=models.BooleanField(verbose_name="Libre de Covid" )
     fecha = models.DateTimeField(verbose_name='Fecha de Registro', auto_now_add=True)
     descripcion = models.CharField(verbose_name='Descripcion', max_length=200)
+    edad = models.IntegerField(verbose_name='Edad', null=True, blank=True)
     class Meta:
         """Meta definition for Analisis_Radiografico."""
         verbose_name = 'Analisis'
@@ -182,8 +186,7 @@ class Analisis_Radiografico(ModeloBase):
             ("see_view_Analisis_paciente_only", "Can_view_Analisis_paciente_only"),
         )
          
-        
-
+   
     def __str__(self):
         """Unicode representation of Analisis_Radiografico."""
         return '{}'.format(self.paciente)

@@ -36,7 +36,7 @@ class MedicoAdmin(admin.ModelAdmin):
 class PacienteAdmin(admin.ModelAdmin):
     '''Admin View for Paciente'''
 
-    list_display = ('usuario','direccion','usuario_creacion','fecha_creacion','usuario_modificacion','fecha_modificacion',)
+    list_display = ('usuario','direccion','usuario_creacion','fecha_creacion','usuario_modificacion','fecha_modificacion','fec_nac',)
     list_filter = ('usuario','direccion',)
     search_fields = ('usuario',)
     
