@@ -1,9 +1,4 @@
-
-{% extends 'plantillaBase.html' %} 
-{% block loader%}
-
-{% endblock loader%}
-{% block content %}
+ {% extends 'plantillaBase.html' %} {% block loader%} {% endblock loader%} {% block content %}
 
 <div class="content">
     <div class="loader">
@@ -30,74 +25,74 @@
 
     </div>
     <div class="change">
-    <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-            <form method="post" class="card-box" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <form method="post" class="card-box" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
 
-                    <div class="col-md-12">
-                        <fieldset class="form-group">
-                            {{form.paciente.label}} {{form.paciente}} {{ form.paciente.errors }}
-                        </fieldset>
+                        <div class="col-md-12">
+                            <fieldset class="form-group">
+                                {{form.paciente.label}} {{form.paciente}} {{ form.paciente.errors }}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset class="form-group">
+                                {{form.doctor.label}} {{form.doctor}} {{ form.doctor.errors }}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset class="form-group">
+                                {{form.imagen.label}} {{form.imagen}} {{ form.imagen.errors }}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+
+                            <fieldset class="form-group">
+                                {{form.descripcion.label}} {{form.descripcion}}{{ form.descripcion.errors }}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+
+                            <fieldset class="form-group">
+                                {{form.estado_registro.label}} {{form.estado_registro}}{{ form.estado_registro.errors }}
+                            </fieldset>
+                        </div>
+
+
+
+
                     </div>
-                    <div class="col-md-12">
-                        <fieldset class="form-group">
-                            {{form.doctor.label}} {{form.doctor}} {{ form.doctor.errors }}
-                        </fieldset>
-                    </div>
-                    <div class="col-md-12">
-                        <fieldset class="form-group">
-                            {{form.imagen.label}} {{form.imagen}} {{ form.imagen.errors }}
-                        </fieldset>
-                    </div>
-                    <div class="col-md-12">
-
-                        <fieldset class="form-group">
-                            {{form.descripcion.label}} {{form.descripcion}}{{ form.descripcion.errors }}
-                        </fieldset>
-                    </div>
-                    <div class="col-md-12">
-
-                        <fieldset class="form-group">
-                            {{form.estado_registro.label}} {{form.estado_registro}}{{ form.estado_registro.errors }}
-                        </fieldset>
+                    <div class="m-t-20 text-center">
+                        <a type="button" class="btn btn-danger submit-btn" href="{% url 'rayx_listar' %}">Cancelar</a>
+                        <button class="btn btn-primary submit-btn " id="onloadp">Guardar Registro</button>
                     </div>
 
-
-
-
-                </div>
-                <div class="m-t-20 text-center">
-                    <a type="button" class="btn btn-danger submit-btn" href="{% url 'rayx_listar' %}">Cancelar</a>
-                    <button class="btn btn-primary submit-btn " id="onloadp">Guardar Registro</button>
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-{% endblock %}
-{% block content_extra_js%}
+{% endblock %} {% block content_extra_js%}
 <script>
     var loader = document.querySelector(".loader")
     var divshow = document.querySelector(".change");
-    loader.style.display ='none'
+    loader.style.display = 'none'
     window.addEventListener("load", activar);
-    function activar(){
-        divshow.style.display='flex'
+
+    function activar() {
+        divshow.style.display = 'flex'
     }
-    $.post('{% url 'rayx_listar' %}',()=>{
+    $("form").submit((e) => {
         window.addEventListener("load", vanish);
-        divshow.style.display ='none'
-        loader.style.display ='flex'
+        divshow.style.display = 'none'
+        loader.style.display = 'flex'
+
         function vanish() {
-          loader.classList.add("disppear");
+            loader.classList.add("disppear");
         }
     });
-    
 </script>
 
 {% endblock content_extra_js%}

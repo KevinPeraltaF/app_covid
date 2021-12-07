@@ -1,0 +1,75 @@
+{% extends 'plantillaBase.html' %} {% block content %}
+<div class="row">
+    <div class="col">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="content">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <table class="table table-bordered  table-responsive-sm table-responsive-xl">
+                <tbody>
+
+                    <tr>
+                        <th>Fecha:</th>
+                        <td>{{object.fecha}}</td>
+                        <th>Resultado de Análisis:</th>
+                        <td> {% if object.result_analisis == True%}
+                            <span class="badge badge-success">SIN COVID</span> {% else %}
+                            <span class="badge badge-danger">COVID DETECTADO</span>{% endif %}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <th>Doctor:</th>
+                        <td>{{object.doctor}}</td>
+
+                        <th>Paciente:</th>
+                        <td>{{object.paciente}}</td>
+
+                    </tr>
+                    <tr>
+                        <th>Edad:</th>
+                        <td colspan="5">{{object.edad}}</td>
+
+
+
+                    </tr>
+                    <tr>
+                        <th>Comentario:</th>
+                        <td colspan="5">{{object.descripcion}}</td>
+
+
+
+                    </tr>
+
+                    <tr>
+                        <tr class="text-center">
+                            <th>Radiografía:</th>
+                            <td colspan="4">
+                                {% if object.imagen %}
+                                <img class="img-rounded " src="{{object.imagen.url}}" alt="" width="600" height="400"> {% else %} N/A {% endif %}
+                            </td>
+                        </tr>
+                    </tr>
+
+
+
+
+                </tbody>
+            </table>
+            <div class="m-t-20 text-center">
+                <a type="button" class="btn btn-success submit-btn" href="{% url 'rayx_listar' %}">Regresar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

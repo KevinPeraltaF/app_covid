@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordChangeView
-
+from django.views.decorators.csrf import csrf_exempt
 #MODELS
 from crum import get_current_user
 from .models import Menu, Group, User,Menu_Groups, EspecialidadMedico,Vacuna,Medico,Paciente,Analisis_Radiografico
@@ -946,7 +946,7 @@ class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
         # Add in a QuerySet of all the books
         context['titulo'] = "Registro de Analisis rádiograficos"
         return context
-
+    
 class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,CreateView):
     permission_required = 'covid.add_analisis_radiografico'
     model = Analisis_Radiografico
@@ -954,9 +954,11 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
                }
     form_class = RayxForm
     template_name = "analisis/analisis_crear.html"
-    success_url = reverse_lazy('rayx_listar')
+    id_reverse=int
+    #success_url = reverse_lazy()
     success_message = 'Registro Guardado Exitosamente'
-    
+    def get_success_url(self):
+        return reverse_lazy('rayx_detalle_paciente',args=[self.id_reverse ])
     def cal_edad(self):
         id_paciente = self.request.POST['paciente']
         usuario = Paciente.objects.get(id=id_paciente)
@@ -976,6 +978,7 @@ class RayxCreateView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMi
         """If the form is valid, save the associated model."""
         self.object = form.save()
         form.instance.edad= self.cal_edad()
+        self.id_reverse = form.instance.id
         
         imagen = form.cleaned_data['imagen']
         ruta = os.path.join(settings.MEDIA_ROOT,'muestra_covid')
@@ -988,6 +991,10 @@ class RayxDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
     model = Analisis_Radiografico
     template_name = "analisis/analisis_detalle.html"
 
+class RayxPacDetailView(LoginRequiredMixin,PermissionRequiredMixin,DetailView):
+    permission_required = ('covid.view_analisis_radiografico')
+    model = Analisis_Radiografico
+    template_name = "analisis/analisis_detalle_paciente.html"     
 class RayxDeleteView(LoginRequiredMixin,PermissionRequiredMixin,SuccessMessageMixin,DeleteView):
     permission_required = 'covid.delete_analisis_radiografico'
     model = Analisis_Radiografico
