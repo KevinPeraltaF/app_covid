@@ -89,7 +89,7 @@
     function activar(){
         divshow.style.display='flex'
     }
-    $('#onloadp').click(()=>{
+    $.post('{% url 'rayx_listar' %}',()=>{
         window.addEventListener("load", vanish);
         divshow.style.display ='none'
         loader.style.display ='flex'

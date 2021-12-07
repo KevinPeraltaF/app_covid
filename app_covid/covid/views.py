@@ -26,9 +26,9 @@ from django.db.models import ProtectedError
 #IA
 from django.conf import settings
 import os
-import numpy as np
+""" import numpy as np
 from tensorflow.python.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.python.keras.models import load_model
+from tensorflow.python.keras.models import load_model """
 
 #MY VIEWS
 class Dashboard_view(LoginRequiredMixin,TemplateView):
@@ -889,22 +889,23 @@ class ReportView(LoginRequiredMixin,PermissionRequiredMixin,TemplateView):
 
 #ANALISIS RADIOGRAFICO
 def predict(file):
-    modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
-    pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
-    cnn = load_model(modelo)
-    cnn.load_weights(pesos)
-    longitud, altura = 200,200 
-    x = load_img(file, target_size=(longitud, altura))
-    x = img_to_array(x)
-    x = np.expand_dims(x, axis=0)
-    arreglo = cnn.predict(x) ##arreglo de 2 dimensiones [[1,0,0]]
-    resultado = arreglo[0]
-    respuesta = np.argmax(resultado)
-    if respuesta==1:
-        print('Sin covid')
-    elif respuesta ==0:
-        print('covid detectado')
-    return respuesta
+    #modelo = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\modelo8.h5')
+    #pesos = os.path.join(settings.CNN_ROOT,'plugins\cnnModelo\pesos8.h5')
+    #cnn = load_model(modelo)
+    #cnn.load_weights(pesos)
+    #longitud, altura = 200,200 
+    #x = load_img(file, target_size=(longitud, altura))
+    #x = img_to_array(x)
+    #x = np.expand_dims(x, axis=0)
+    #arreglo = cnn.predict(x) ##arreglo de 2 dimensiones [[1,0,0]]
+    #resultado = arreglo[0]
+    #respuesta = np.argmax(resultado)
+    #if respuesta==1:
+    #    print('Sin covid')
+    #elif respuesta ==0:
+    #    print('covid detectado')
+    #return respuesta
+    return 0
 
 
 class RayxListView(LoginRequiredMixin,PermissionRequiredMixin,ListView):
