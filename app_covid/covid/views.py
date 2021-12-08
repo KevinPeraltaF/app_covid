@@ -786,54 +786,56 @@ class ReportView(LoginRequiredMixin,PermissionRequiredMixin,TemplateView):
         context = super().get_context_data(**kwargs)
         
         busqueda = self.request.GET.get("year")
+        edadMin =self.request.GET.get('edadMin')
+        edadMax = self.request.GET.get('edadMax')
         context['titulo'] ="Reportes estadísticos Covid-19"
         if busqueda:
             anio= busqueda
-            context['anio'] =  "REPORTE: AÑO-"+ anio
-            context['positivos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,).count()
-            context['negativo'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,).count()
-            context['positivosMasc'] = Analisis_Radiografico.objects.filter(result_analisis = 0,paciente__usuario__genero = 'M',fecha__year =anio,).count()
-            context['negativoMasc'] = Analisis_Radiografico.objects.filter(result_analisis = 1,paciente__usuario__genero = 'M',fecha__year =anio,).count()
-            context['positivosFem'] = Analisis_Radiografico.objects.filter(result_analisis = 0,paciente__usuario__genero = 'F',fecha__year =anio,).count()
-            context['negativoFem'] = Analisis_Radiografico.objects.filter(result_analisis = 1,paciente__usuario__genero = 'F',fecha__year =anio,).count()
-            context['total'] = Analisis_Radiografico.objects.filter(fecha__year =anio,).count()
+            context['anio'] =  "REPORTE: AÑO-"+ anio +" Y EDAD ENTRE-"+edadMin +" & "+edadMax
+            context['positivos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,).count()
+            context['negativo'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,).count()
+            context['positivosMasc'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],paciente__usuario__genero = 'M',fecha__year =anio,).count()
+            context['negativoMasc'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],paciente__usuario__genero = 'M',fecha__year =anio,).count()
+            context['positivosFem'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],paciente__usuario__genero = 'F',fecha__year =anio,).count()
+            context['negativoFem'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],paciente__usuario__genero = 'F',fecha__year =anio,).count()
+            context['total'] = Analisis_Radiografico.objects.filter(fecha__year =anio,edad__range=[edadMin,edadMax],).count()
 
             
-            context['eneroPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='01',).count()
-            context['eneroNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='01',).count()
+            context['eneroPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='01',).count()
+            context['eneroNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='01',).count()
             
-            context['febPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='02',).count()
-            context['febNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='02',).count()
+            context['febPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='02',).count()
+            context['febNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='02',).count()
             
-            context['marzPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='03',).count()
-            context['marzNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='03',).count()
+            context['marzPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='03',).count()
+            context['marzNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='03',).count()
         
-            context['abrilPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='04',).count()
-            context['abrilNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='04',).count()
+            context['abrilPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='04',).count()
+            context['abrilNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='04',).count()
         
-            context['mayPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='05',).count()
-            context['mayNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='05',).count()
+            context['mayPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='05',).count()
+            context['mayNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='05',).count()
         
-            context['junioPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='06',).count()
-            context['junioNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='06',).count()
+            context['junioPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='06',).count()
+            context['junioNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='06',).count()
             
-            context['julioPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='07',).count()
-            context['julioNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='07',).count()
+            context['julioPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='07',).count()
+            context['julioNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='07',).count()
             
-            context['agostPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='08',).count()
-            context['agostNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='08',).count()
+            context['agostPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='08',).count()
+            context['agostNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='08',).count()
             
-            context['septPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='09',).count()
-            context['septNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='09',).count()
+            context['septPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='09',).count()
+            context['septNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='09',).count()
             
-            context['octPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='10',).count()
-            context['octNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='10',).count()
+            context['octPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='10',).count()
+            context['octNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='10',).count()
             
-            context['novPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='11',).count()
-            context['novNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='11',).count()
+            context['novPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='11',).count()
+            context['novNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='11',).count()
             
-            context['dicPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,fecha__year =anio,fecha__month ='12',).count()
-            context['dicNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,fecha__year =anio,fecha__month ='12',).count()
+            context['dicPos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='12',).count()
+            context['dicNeg'] = Analisis_Radiografico.objects.filter(result_analisis = 1,edad__range=[edadMin,edadMax],fecha__year =anio,fecha__month ='12',).count()
         else:
             context['anio'] ='REPORTE: AÑO-ALL'
             context['positivos'] = Analisis_Radiografico.objects.filter(result_analisis = 0,).count()
